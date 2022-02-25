@@ -99,6 +99,11 @@ namespace Wep.App
 
             app.UseMiddleware<ExceptionHandler>();
             app.UseRouting();
+            app.UseCors(x =>
+            {
+                x.AllowAnyHeader();
+                x.AllowAnyOrigin();
+            });
             app.UseSwagger(x => x.SerializeAsV2 = true);
             app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
 

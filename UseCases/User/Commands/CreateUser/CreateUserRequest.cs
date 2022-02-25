@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using UseCases.Common.User.Model;
 using UseCases.User.Dto;
 
 namespace UseCases.User.Commands.CreateUser
@@ -13,12 +14,15 @@ namespace UseCases.User.Commands.CreateUser
 
         public string Password { get; }
 
-        public CreateUserRequest(string login, string password, string name, string surname)
+        public UserRole UserRole { get; }
+
+        public CreateUserRequest(string login, string password, string name, string surname, UserRole role)
         {
             Login = login;
             Password = password;
             Name = name;
             Surname = surname;
+            UserRole = role;
         }
     }
 }

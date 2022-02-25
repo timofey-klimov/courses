@@ -23,7 +23,7 @@ namespace Wep.App.Middlewares
             {
                 await _next(context);
             }
-            catch (ExceptionBase ex)
+            catch (ApiException ex)
             {
                 var response = ApiResponse.Fail((int)ex.Code, ex.Message);
 

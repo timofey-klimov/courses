@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Authorization.Interfaces\Authorization.Interfaces.csproj" />
+    <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

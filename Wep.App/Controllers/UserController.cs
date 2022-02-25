@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,14 +25,14 @@ namespace Wep.App.Controllers
         [HttpPost("sign-in")]
         public async Task<ApiResponse<AuthUserDto>> Login([FromBody] LoginUserRequest request, CancellationToken token)
         {
-            var result = await Mediator.Send(new LoginRequest(request.Login, request.Password), token);
+            var result = await Mediator.Send(new LoginRequest(request.Login, request.Password, request.Role), token);
             return Ok(result);
         }
 
         [HttpPost("sign-up")]
         public async Task<ApiResponse<AuthUserDto>> Register([FromBody] RegisterUserRequest request, CancellationToken token)
         {
-            var result = await Mediator.Send(new CreateUserRequest(request.Login, request.Password, request.Name, request.Surname), token);
+            var result = await Mediator.Send(new CreateUserRequest(request.Login, request.Password, request.Name, request.Surname, request.Role), token);
             return Ok(result);
         }
 

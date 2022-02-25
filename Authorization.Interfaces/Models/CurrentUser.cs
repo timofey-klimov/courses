@@ -12,12 +12,15 @@ namespace Authorization.Interfaces.Models
 
         public string Surname { get; }
 
-        public CurrentUser(Guid id, string name, string login, string surname)
+        public UserRole Role { get; }
+
+        public CurrentUser(Guid id, string name, string login, string surname, UserRole role)
         {
             Id = id;
             Name = name;
             Login = login;
             Surname = surname;
+            Role = role;
         }
     }
 }

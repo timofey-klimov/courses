@@ -13,13 +13,20 @@ namespace Entities
 
         public string HashedPassword { get; private set; }
 
+        public UserRole Role { get; private set; }
 
-        public User(string name, string surname, string login, string hashedPassword)
+        private User()
+        {
+
+        }
+
+        public User(string name, string surname, string login, string hashedPassword, UserRole userRole)
         {
             Login = login;
             Surname = surname;
             Name = name;
             HashedPassword = hashedPassword;
+            Role = userRole;
         }
     }
 }

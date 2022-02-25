@@ -2,11 +2,11 @@
 
 namespace Entities.Exceptions
 {
-    public abstract class ExceptionBase : Exception
+    public abstract class ApiException : Exception
     {
         public ExceptionCodes Code { get; }
 
-        public ExceptionBase(ExceptionCodes code)
+        public ApiException(ExceptionCodes code)
         {
             Code = code;
         }

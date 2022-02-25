@@ -1,4 +1,6 @@
-﻿namespace Wep.App.Dto.Request
+﻿using UseCases.Common.User.Model;
+
+namespace Wep.App.Dto.Request
 {
     public class RegisterUserRequest
     {
@@ -9,5 +11,7 @@
         public string Login { get; set; }
 
         public string Password { get; set; }
+
+        public UserRole Role { get; set; }
     }
 }

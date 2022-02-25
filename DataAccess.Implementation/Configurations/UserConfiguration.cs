@@ -1,6 +1,7 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace DataAccess.Implementation.Configurations
 {
@@ -31,6 +32,10 @@ namespace DataAccess.Implementation.Configurations
 
             builder.Property(x => x.UpdateDate)
                 .HasColumnType("datetime2(0)");
+
+            builder.Property(x => x.Role)
+                .HasConversion(x => x.ToString(),
+                                y => (UserRole)Enum.Parse(typeof(UserRole), y));
         }
     }
 }

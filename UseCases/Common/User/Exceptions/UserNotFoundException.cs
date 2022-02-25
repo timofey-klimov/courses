@@ -2,7 +2,7 @@
 
 namespace UseCases.Common.User.Exceptions
 {
-    public class UserNotFoundException : ExceptionBase
+    public class UserNotFoundException : ApiException
     {
         public UserNotFoundException() 
             : base(ExceptionCodes.UserNotFound)

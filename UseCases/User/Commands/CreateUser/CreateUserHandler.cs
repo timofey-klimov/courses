@@ -1,8 +1,10 @@
 ﻿using Authorization.Interfaces;
 using DataAccess.Interfaces;
+using Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.Encription;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -34,16 +36,16 @@ namespace UseCases.User.Commands.CreateUser
             if (_dbContext.Users.Any(x => x.Login == request.Login))
                 throw new LoginIsUsedException();
 
-            var createdUser = new Entities.User(request.Name, request.Surname, request.Login, hashedPassword);
+            var role = (UserRole)Enum.Parse(typeof(UserRole), request.UserRole.ToString());
+
+            var createdUser = new Entities.User(request.Name, request.Surname, request.Login, hashedPassword, role);
 
             await _dbContext.Users.AddAsync(createdUser);
             await _dbContext.SaveChangesAsync();
 
             return new AuthUserDto(_tokenProvider.CreateToken(new Claim[] 
                                     { new Claim("id", createdUser.Id.ToString()),
-                                      new Claim("name", createdUser.Name),
-                                      new Claim("surname", createdUser.Surname),
-                                      new Claim("login", createdUser.Login)
+                                      new Claim(ClaimTypes.Role, createdUser.Role.ToString())
                                     }));
         }
     }
