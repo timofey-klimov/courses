@@ -1,10 +1,9 @@
 ﻿using Authorization.Interfaces;
 using DataAccess.Interfaces;
-using Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 using Shared.Encription;
-using System;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,14 +32,10 @@ namespace UseCases.User.Queries.Login
             if (user is null)
                 throw new UserNotFoundException();
 
-            var role = (UserRole)Enum.Parse(typeof(UserRole), request.Role.ToString());
+            if (user.Role.ToString() != request.Role.ToString())
+                throw new AccessDeniedException();
 
-            if (user.Role != role)
-                throw new RoleDoestMatchException();
-
-            return new AuthUserDto(_jwtTokenProvider.CreateToken(new Claim[] { new Claim("id", user.Id.ToString()),
-                                                                               new Claim(ClaimTypes.Role, user.Role.ToString())
-                                                                            }));
+            return new AuthUserDto(_jwtTokenProvider.CreateToken(new Claim[] { new Claim("id", user.Id.ToString())}), user.Role.ToEnum<Common.User.Model.UserRole>());
         }
     }
 }

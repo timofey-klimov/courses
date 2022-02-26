@@ -6,5 +6,9 @@ namespace Authorization.Interfaces
     public interface ICurrentUserProvider
     {
         Task<CurrentUser> GetUserAsync();
+
+        bool IsAuth();
+
+        Task<bool> IsAdmin();
     }
 }

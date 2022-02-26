@@ -13,5 +13,10 @@ namespace Entities.Base
         {
             CreateDate = DateTime.Now;
         }
+
+        public void UpdateEntity()
+        {
+            UpdateDate = DateTime.Now;
+        }
     }
 }

@@ -19,6 +19,11 @@ namespace Authorization.Impl
             _contextAccessor = contextAccessor ?? throw new ArgumentNullException(nameof(contextAccessor));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
+
+        /// <summary>
+        /// Получает текущего пользователя в рамках запроса
+        /// </summary>
+        /// <returns></returns>
         public async Task<CurrentUser> GetUserAsync()
         {
             var contextUser = _contextAccessor.HttpContext?.User;
@@ -30,9 +35,29 @@ namespace Authorization.Impl
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
 
-            var role = user.Role.To<UserRole>();
+            var role = user.Role.ToEnum<UserRole>();
 
             return new CurrentUser(user.Id, user.Name, user.Login, user.Surname, role);
+        }
+
+        /// <summary>
+        /// Проверяет является ли админом текущий пользователь
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> IsAdmin()
+        {
+            return (await this.GetUserAsync())?.Role == UserRole.Admin;
+        }
+
+        /// <summary>
+        /// Проверяет прошел ли пользователь аутентификацию 
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAuth()
+        {
+            var contextUser = _contextAccessor.HttpContext?.User;
+
+            return contextUser != null && contextUser.Identity?.IsAuthenticated == true;
         }
     }
 }

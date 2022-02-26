@@ -36,6 +36,8 @@ namespace DataAccess.Implementation.Configurations
             builder.Property(x => x.Role)
                 .HasConversion(x => x.ToString(),
                                 y => (UserRole)Enum.Parse(typeof(UserRole), y));
+
+            builder.Ignore(x => x.Events);
         }
     }
 }

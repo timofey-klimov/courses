@@ -3,6 +3,7 @@ using DataAccess.Interfaces;
 using Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 using Shared.Encription;
 using System;
 using System.Linq;
@@ -14,16 +15,14 @@ using UseCases.User.Dto;
 
 namespace UseCases.User.Commands.CreateUser
 {
-    public class CreateUserHandler : IRequestHandler<CreateUserRequest, AuthUserDto>
+    public class CreateUserHandler : IRequestHandler<CreateUserRequest>
     {
         private readonly IDbContext _dbContext;
-        private readonly IJwtTokenProvider _tokenProvider;
-        public CreateUserHandler(IDbContext dbContext, IJwtTokenProvider tokenProvider)
+        public CreateUserHandler(IDbContext dbContext)
         {
             _dbContext = dbContext;
-            _tokenProvider = tokenProvider;
         }
-        public async Task<AuthUserDto> Handle(CreateUserRequest request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
             var hashedPassword = Sha256Encription.Encript(request.Password);
 
@@ -36,17 +35,14 @@ namespace UseCases.User.Commands.CreateUser
             if (_dbContext.Users.Any(x => x.Login == request.Login))
                 throw new LoginIsUsedException();
 
-            var role = (UserRole)Enum.Parse(typeof(UserRole), request.UserRole.ToString());
+            var role = request.UserRole.ToEnum<UserRole>();
 
-            var createdUser = new Entities.User(request.Name, request.Surname, request.Login, hashedPassword, role);
+            var createdUser = new Entities.User(request.Name, request.Surname, request.Login, request.Password, hashedPassword, role);
 
             await _dbContext.Users.AddAsync(createdUser);
             await _dbContext.SaveChangesAsync();
 
-            return new AuthUserDto(_tokenProvider.CreateToken(new Claim[] 
-                                    { new Claim("id", createdUser.Id.ToString()),
-                                      new Claim(ClaimTypes.Role, createdUser.Role.ToString())
-                                    }));
+            return Unit.Value;
         }
     }
 }

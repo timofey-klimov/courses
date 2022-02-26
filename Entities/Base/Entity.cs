@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Entities.Events;
+using System;
+using System.Collections.Generic;
 
 namespace Entities.Base
 {
-    public abstract class Entity<T>
+    public class Entity<T> : DomainEventsEntity
         where T : IEquatable<T>
     {
         public T Id { get; private set; }

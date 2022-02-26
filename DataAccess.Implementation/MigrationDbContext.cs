@@ -10,7 +10,7 @@ namespace DataAccess.Implementation
             var optBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optBuilder.UseSqlServer("Server=DESKTOP-JDVB3O9\\SQLEXPRESS01;Database=FlatBot;Trusted_Connection=True;");
 
-            return new AppDbContext(optBuilder.Options);
+            return new AppDbContext(optBuilder.Options, default);
         }
     }
 }

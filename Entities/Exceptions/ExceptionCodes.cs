@@ -5,6 +5,7 @@
         UserExisted = 100,
         LoginInUsed = 101,
         UserNotFound = 102,
-        RoleDoesntMatch = 103
+        AccessDenied = 103,
+        PasswordMatches = 104
     }
 }

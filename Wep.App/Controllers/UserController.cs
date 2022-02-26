@@ -30,10 +30,10 @@ namespace Wep.App.Controllers
         }
 
         [HttpPost("sign-up")]
-        public async Task<ApiResponse<AuthUserDto>> Register([FromBody] RegisterUserRequest request, CancellationToken token)
+        public async Task<ApiResponse> Register([FromBody] RegisterUserRequest request, CancellationToken token)
         {
-            var result = await Mediator.Send(new CreateUserRequest(request.Login, request.Password, request.Name, request.Surname, request.Role), token);
-            return Ok(result);
+            await Mediator.Send(new CreateUserRequest(request.Login, request.Password, request.Name, request.Surname, request.Role), token);
+            return Ok();
         }
 
         [HttpGet("get-all")]
