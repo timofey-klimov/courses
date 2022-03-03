@@ -3,6 +3,8 @@ using Authorization.Impl.Settings;
 using Authorization.Interfaces;
 using DataAccess.Implementation;
 using DataAccess.Interfaces;
+using MailSender.Impl.Settings;
+using MailSender.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +44,9 @@ namespace Wep.App
 
 
             var jwtSettings = _cfg.GetSection(nameof(JwtSecuritySettings)).Get<JwtSecuritySettings>();
+            var stmpSettings = _cfg.GetSection(nameof(SmtpClientSettings)).Get<SmtpClientSettings>();
+            services.AddScoped<IMailSender, MailSender.Impl.MailSender>();
+            services.AddSingleton(stmpSettings);
             services.AddSingleton(jwtSettings);
             services.AddControllers();
             services.AddMediatR(typeof(CreateUserRequest).Assembly);

@@ -11,6 +11,8 @@ namespace DataAccess.Interfaces
     {
         DbSet<User> Users { get; }
 
+        DbSet<Test> Tests { get; }
+
         DatabaseFacade Database { get; }
 
         Task<int> SaveChangesAsync(CancellationToken token = default);

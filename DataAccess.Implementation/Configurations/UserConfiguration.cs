@@ -37,6 +37,10 @@ namespace DataAccess.Implementation.Configurations
                 .HasConversion(x => x.ToString(),
                                 y => (UserRole)Enum.Parse(typeof(UserRole), y));
 
+            builder.Metadata
+                .FindNavigation(nameof(User.CreatedTests))
+                .SetField("_tests");
+
             builder.Ignore(x => x.Events);
         }
     }

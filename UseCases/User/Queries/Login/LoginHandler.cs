@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared;
 using Shared.Encription;
+using System;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,8 +21,8 @@ namespace UseCases.User.Queries.Login
 
         public LoginHandler(IDbContext dbContext, IJwtTokenProvider jwtTokenProvider)
         {
-            _dbContext = dbContext;
-            _jwtTokenProvider = jwtTokenProvider;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _jwtTokenProvider = jwtTokenProvider ?? throw new ArgumentNullException(nameof(jwtTokenProvider));
         }
 
         public async Task<AuthUserDto> Handle(LoginRequest request, CancellationToken cancellationToken)
@@ -35,7 +36,7 @@ namespace UseCases.User.Queries.Login
             if (user.Role.ToString() != request.Role.ToString())
                 throw new AccessDeniedException();
 
-            return new AuthUserDto(_jwtTokenProvider.CreateToken(new Claim[] { new Claim("id", user.Id.ToString())}), user.Role.ToEnum<Common.User.Model.UserRole>());
+            return new AuthUserDto(_jwtTokenProvider.CreateToken(new Claim[] { new Claim("id", user.Id.ToString())}), user.IsFirstSignIn);
         }
     }
 }

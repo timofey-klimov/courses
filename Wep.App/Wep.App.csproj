@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Authorization.Impl\Authorization.Impl.csproj" />
     <ProjectReference Include="..\DataAccess.Implementation\DataAccess.Implementation.csproj" />
+    <ProjectReference Include="..\MailSender.Impl\MailSender.Impl.csproj" />
     <ProjectReference Include="..\UseCases\UseCases.csproj" />
   </ItemGroup>
 

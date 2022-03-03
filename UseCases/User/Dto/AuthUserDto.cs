@@ -6,12 +6,12 @@ namespace UseCases.User.Dto
     {
         public string Token { get; }
 
-        public UserRole Role { get; }
+        public bool FirstSignIn { get; } 
 
-        public AuthUserDto(string token, UserRole role)
+        public AuthUserDto(string token, bool firstSignIn)
         {
             Token = token;
-            Role = role;
+            FirstSignIn = firstSignIn;
         }
     }
 }

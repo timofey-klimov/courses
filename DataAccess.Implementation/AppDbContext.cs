@@ -21,7 +21,10 @@ namespace DataAccess.Implementation
         {
             _mediatr = mediator;
         }
+
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Test> Tests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +41,7 @@ namespace DataAccess.Implementation
 
             foreach (var entity in entites)
             {
-                events.AddRange(entity.Events);
+                events.AddRange(entity?.Events);
                 entity.Events?.Clear();
             }
 

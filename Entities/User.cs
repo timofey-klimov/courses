@@ -2,6 +2,8 @@
 using Entities.Events.User;
 using Entities.Exceptions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Entities
 {
@@ -18,6 +20,11 @@ namespace Entities
         public UserRole Role { get; private set; }
 
         public bool IsFirstSignIn { get; private set; }
+
+        private List<Test> _tests;
+
+        public IReadOnlyCollection<Test> CreatedTests => _tests.AsReadOnly();
+
 
         private User()
         {
@@ -42,6 +49,18 @@ namespace Entities
              
             HashedPassword = hashedPassword;
             UpdateEntity();
+
+            return this;
+        }
+
+        public User Acvivate(string hashedPassword)
+        {
+            if (HashedPassword == hashedPassword)
+                throw new PasswordMatchesExcepton();
+
+            HashedPassword = hashedPassword;
+            UpdateEntity();
+            IsFirstSignIn = false;
 
             return this;
         }
