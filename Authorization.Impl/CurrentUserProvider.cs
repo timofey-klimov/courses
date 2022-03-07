@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Authorization.Impl
@@ -44,9 +45,30 @@ namespace Authorization.Impl
         /// Проверяет является ли админом текущий пользователь
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> IsAdmin()
+        public bool IsAdmin()
         {
-            return (await this.GetUserAsync())?.Role == UserRole.Admin;
+            var contextUser = _contextAccessor.HttpContext?.User;
+
+            if (contextUser == null || !contextUser.Identity.IsAuthenticated)
+                return default;
+
+            var stringRole = contextUser.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault().Value;
+
+            var role = (UserRole)Enum.Parse(typeof(UserRole), stringRole);
+
+            return role == UserRole.Admin;
+        }
+
+        public UserRole GetUserRole()
+        {
+            var contextUser = _contextAccessor.HttpContext?.User;
+
+            if (contextUser == null || !contextUser.Identity.IsAuthenticated)
+                return default;
+
+            var stringRole = contextUser.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault().Value;
+
+            return (UserRole)Enum.Parse(typeof(UserRole), stringRole);
         }
 
         /// <summary>
@@ -59,5 +81,17 @@ namespace Authorization.Impl
 
             return contextUser != null && contextUser.Identity?.IsAuthenticated == true;
         }
+
+        public Guid GetUserId()
+        {
+            var contextUser = _contextAccessor.HttpContext?.User;
+
+            if (contextUser == null || !contextUser.Identity.IsAuthenticated)
+                return default;
+
+            var id = Guid.Parse(contextUser.Claims.Where(x => x.Type == "id").FirstOrDefault().Value);
+            return id;
+        }
+
     }
 }

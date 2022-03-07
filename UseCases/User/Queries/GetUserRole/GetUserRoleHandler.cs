@@ -17,9 +17,9 @@ namespace UseCases.User.Queries.GetUserRole
         }
         public async Task<UserRole> Handle(GetUserRoleRequest request, CancellationToken cancellationToken)
         {
-            var user = await _currentUserProvider.GetUserAsync();
+            var role = _currentUserProvider.GetUserRole();
 
-            return user.Role.ToEnum<UserRole>();
+            return role.ToEnum<UserRole>();
         }
     }
 }

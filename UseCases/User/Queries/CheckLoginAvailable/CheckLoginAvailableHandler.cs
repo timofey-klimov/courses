@@ -22,7 +22,7 @@ namespace UseCases.User.Queries.CheckLoginAvailable
 
         public async Task<Unit> Handle(CheckLoginAvailableRequest request, CancellationToken cancellationToken)
         {
-            if (!await _currentUserProvider.IsAdmin())
+            if (!_currentUserProvider.IsAdmin())
                 throw new AccessDeniedException();
 
             if (_dbContext.Users.Any(x => x.Login == request.Login))

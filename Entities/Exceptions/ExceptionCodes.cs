@@ -6,6 +6,7 @@
         LoginIsNotAvailable = 101,
         UserNotFound = 102,
         AccessDenied = 103,
-        PasswordMatches = 104
+        PasswordMatches = 104,
+        QuestionAlreadyExist = 105
     }
 }

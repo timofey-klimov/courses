@@ -27,7 +27,7 @@ namespace UseCases.User.Commands.CreateUser
         }
         public async Task<Unit> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            if (!await _currentUserProvider.IsAdmin())
+            if (!_currentUserProvider.IsAdmin())
                 throw new AccessDeniedException();
 
             var hashedPassword = Sha256Encription.Encript(request.Password);

@@ -1,4 +1,5 @@
 ﻿using Authorization.Interfaces.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace Authorization.Interfaces
@@ -9,6 +10,10 @@ namespace Authorization.Interfaces
 
         bool IsAuth();
 
-        Task<bool> IsAdmin();
+        bool IsAdmin();
+
+        Guid GetUserId();
+
+        UserRole GetUserRole();
     }
 }

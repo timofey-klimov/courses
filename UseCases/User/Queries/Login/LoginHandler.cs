@@ -36,7 +36,8 @@ namespace UseCases.User.Queries.Login
             if (user.Role.ToString() != request.Role.ToString())
                 throw new AccessDeniedException();
 
-            return new AuthUserDto(_jwtTokenProvider.CreateToken(new Claim[] { new Claim("id", user.Id.ToString())}), user.IsFirstSignIn);
+            return new AuthUserDto(_jwtTokenProvider.CreateToken(new Claim[] { new Claim("id", user.Id.ToString()),
+                                                                                new Claim(ClaimTypes.Role, user.Role.ToString())}), user.IsFirstSignIn);
         }
     }
 }
