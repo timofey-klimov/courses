@@ -2,8 +2,10 @@
 using Entities;
 using Entities.Base;
 using Entities.Events;
+using Entities.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,16 +17,20 @@ namespace DataAccess.Implementation
     public class AppDbContext : DbContext, IDbContext
     {
         private readonly IMediator _mediatr;
+        private readonly ILogger<AppDbContext> _logger;
 
-        public AppDbContext(DbContextOptions<AppDbContext> opts, IMediator mediator)
+        public AppDbContext(DbContextOptions<AppDbContext> opts, IMediator mediator, ILogger<AppDbContext> logger)
             : base(opts)
         {
             _mediatr = mediator;
+            _logger = logger;
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Participant> Participants { get; set; }
 
         public DbSet<Test> Tests { get; set; }
+
+        public DbSet<UserRole> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,7 +43,7 @@ namespace DataAccess.Implementation
 
             var entites = this.ChangeTracker.Entries()
                 .Select(x => x.Entity)
-                .Cast<DomainEventsEntity>();
+                .OfType<DomainEventsEntity>();
 
             foreach (var entity in entites)
             {
@@ -50,6 +56,11 @@ namespace DataAccess.Implementation
             events.ForEach(async x => await _mediatr.Publish(x));
 
             return result;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.LogTo(x => _logger.LogInformation(x));
         }
     }
 }

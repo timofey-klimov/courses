@@ -1,6 +1,7 @@
 ﻿using Authorization.Interfaces;
 using DataAccess.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace UseCases.User.Queries.CheckLoginAvailable
             if (!_currentUserProvider.IsAdmin())
                 throw new AccessDeniedException();
 
-            if (_dbContext.Users.Any(x => x.Login == request.Login))
+            if (await _dbContext.Participants.AnyAsync(x => x.Login == request.Login))
                 throw new LoginIsNotAvailableException();
 
             return Unit.Value;

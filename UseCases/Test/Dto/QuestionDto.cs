@@ -6,8 +6,6 @@ namespace UseCases.Test.Dto
     {
         public int Position { get; set; }
 
-        public string Title { get; set; }
-
         public string Content { get; set; }
 
         public QuestionTypeDto Type { get; set; }

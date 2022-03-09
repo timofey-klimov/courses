@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Logging;
 
 namespace DataAccess.Implementation
 {
@@ -8,9 +9,9 @@ namespace DataAccess.Implementation
         public AppDbContext CreateDbContext(string[] args)
         {
             var optBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optBuilder.UseSqlServer("Server=DESKTOP-1O8U0H5\\SQLEXPRESS;Database=Courses;Trusted_Connection=True;");
+            optBuilder.UseSqlServer("Server=DESKTOP-JDVB3O9\\SQLEXPRESS;Database=Courses;Trusted_Connection=True;");
 
-            return new AppDbContext(optBuilder.Options, default);
+            return new AppDbContext(optBuilder.Options, default, new Logger<AppDbContext>(new LoggerFactory()));
         }
     }
 }

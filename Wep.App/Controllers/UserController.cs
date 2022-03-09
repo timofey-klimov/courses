@@ -67,9 +67,9 @@ namespace Wep.App.Controllers
 
         [Authorize]
         [HttpGet("user-role")]
-        public async Task<ApiResponse<UserRole>> GetUserRole()
+        public async Task<ApiResponse<IEnumerable<string>>> GetUserRole(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetUserRoleRequest());
+            var result = await Mediator.Send(new GetUserRoleRequest(), cancellationToken);
 
             return Ok(result);
         }

@@ -1,5 +1,5 @@
 ﻿using Authorization.Interfaces.Models;
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Authorization.Interfaces
@@ -12,8 +12,12 @@ namespace Authorization.Interfaces
 
         bool IsAdmin();
 
-        Guid GetUserId();
+        bool IsManager();
 
-        UserRole GetUserRole();
+        bool IsUser();
+
+        int GetUserId();
+
+        IEnumerable<UserRole> GetUserRoles();
     }
 }

@@ -12,6 +12,6 @@ namespace Wep.App.Dto.Request
 
         public string Password { get; set; }
 
-        public UserRole Role { get; set; }
+        public string Role { get; set; }
     }
 }

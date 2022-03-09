@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Implementation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220303211644_Questions")]
-    partial class Questions
+    [Migration("20220309163139_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,10 @@ namespace DataAccess.Implementation.Migrations
 
             modelBuilder.Entity("Entities.AnswerOption", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -39,8 +40,8 @@ namespace DataAccess.Implementation.Migrations
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("QuestionWithAnswerOptionsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long?>("QuestionWithAnswerOptionsId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
@@ -54,9 +55,10 @@ namespace DataAccess.Implementation.Migrations
 
             modelBuilder.Entity("Entities.Question", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -67,12 +69,15 @@ namespace DataAccess.Implementation.Migrations
                         .HasColumnType("datetime2(0)")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<Guid?>("TestId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Questiontype")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TestId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
@@ -82,21 +87,27 @@ namespace DataAccess.Implementation.Migrations
                     b.HasIndex("TestId");
 
                     b.ToTable("Questions");
+
+                    b.HasDiscriminator<string>("Questiontype").HasValue("Question");
                 });
 
             modelBuilder.Entity("Entities.Test", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2(0)")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
@@ -108,11 +119,12 @@ namespace DataAccess.Implementation.Migrations
                     b.ToTable("Tests");
                 });
 
-            modelBuilder.Entity("Entities.User", b =>
+            modelBuilder.Entity("Entities.Users.Participant", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreateDate")
                         .ValueGeneratedOnAdd()
@@ -123,74 +135,127 @@ namespace DataAccess.Implementation.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsFirstSignIn")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
+                    b.Property<string>("ParticipantType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Participants");
+
+                    b.HasDiscriminator<string>("ParticipantType").HasValue("Participant");
+                });
+
+            modelBuilder.Entity("Entities.Users.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("ParticipantUserRole", b =>
+                {
+                    b.Property<int>("ParticipantsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ParticipantsId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("ParticipantUserRole");
                 });
 
             modelBuilder.Entity("Entities.QuestionWithAnswerOptions", b =>
                 {
                     b.HasBaseType("Entities.Question");
 
-                    b.ToTable("QuestionsWithAnswerOptions");
+                    b.HasDiscriminator().HasValue("AnswerOptions");
                 });
 
             modelBuilder.Entity("Entities.QuestionWithFileAnswer", b =>
                 {
                     b.HasBaseType("Entities.Question");
 
-                    b.ToTable("QuestionsWithFileAnswer");
+                    b.HasDiscriminator().HasValue("FileAnswer");
                 });
 
             modelBuilder.Entity("Entities.QuestionWithTextAnswer", b =>
                 {
                     b.HasBaseType("Entities.Question");
 
-                    b.ToTable("QuestionsWithTextAnswer");
+                    b.HasDiscriminator().HasValue("TextAnswer");
+                });
+
+            modelBuilder.Entity("Entities.Users.Admin", b =>
+                {
+                    b.HasBaseType("Entities.Users.Participant");
+
+                    b.HasDiscriminator().HasValue("Admin");
+                });
+
+            modelBuilder.Entity("Entities.Users.Manager", b =>
+                {
+                    b.HasBaseType("Entities.Users.Participant");
+
+                    b.HasDiscriminator().HasValue("Manager");
+                });
+
+            modelBuilder.Entity("Entities.Users.User", b =>
+                {
+                    b.HasBaseType("Entities.Users.Participant");
+
+                    b.HasDiscriminator().HasValue("User");
                 });
 
             modelBuilder.Entity("Entities.AnswerOption", b =>
                 {
                     b.HasOne("Entities.QuestionWithAnswerOptions", null)
                         .WithMany("Answers")
-                        .HasForeignKey("QuestionWithAnswerOptionsId");
+                        .HasForeignKey("QuestionWithAnswerOptionsId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Entities.Question", b =>
                 {
                     b.HasOne("Entities.Test", null)
                         .WithMany("Questions")
-                        .HasForeignKey("TestId");
+                        .HasForeignKey("TestId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Entities.Test", b =>
                 {
-                    b.HasOne("Entities.User", "CreatedBy")
+                    b.HasOne("Entities.Users.Manager", "CreatedBy")
                         .WithMany("CreatedTests")
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -199,30 +264,18 @@ namespace DataAccess.Implementation.Migrations
                     b.Navigation("CreatedBy");
                 });
 
-            modelBuilder.Entity("Entities.QuestionWithAnswerOptions", b =>
+            modelBuilder.Entity("ParticipantUserRole", b =>
                 {
-                    b.HasOne("Entities.Question", null)
-                        .WithOne()
-                        .HasForeignKey("Entities.QuestionWithAnswerOptions", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                    b.HasOne("Entities.Users.Participant", null)
+                        .WithMany()
+                        .HasForeignKey("ParticipantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("Entities.QuestionWithFileAnswer", b =>
-                {
-                    b.HasOne("Entities.Question", null)
-                        .WithOne()
-                        .HasForeignKey("Entities.QuestionWithFileAnswer", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Entities.QuestionWithTextAnswer", b =>
-                {
-                    b.HasOne("Entities.Question", null)
-                        .WithOne()
-                        .HasForeignKey("Entities.QuestionWithTextAnswer", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                    b.HasOne("Entities.Users.UserRole", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -231,14 +284,14 @@ namespace DataAccess.Implementation.Migrations
                     b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("Entities.User", b =>
-                {
-                    b.Navigation("CreatedTests");
-                });
-
             modelBuilder.Entity("Entities.QuestionWithAnswerOptions", b =>
                 {
                     b.Navigation("Answers");
+                });
+
+            modelBuilder.Entity("Entities.Users.Manager", b =>
+                {
+                    b.Navigation("CreatedTests");
                 });
 #pragma warning restore 612, 618
         }

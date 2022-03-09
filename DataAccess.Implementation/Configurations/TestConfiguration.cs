@@ -19,7 +19,10 @@ namespace DataAccess.Implementation.Configurations
             builder.Property(x => x.UpdateDate)
                 .HasColumnType("datetime2(0)");
 
-            builder.HasMany(x => x.Questions);
+            builder.HasMany(x => x.Questions)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(x => x.CreatedBy)
                 .WithMany(x => x.CreatedTests)
                 .IsRequired();

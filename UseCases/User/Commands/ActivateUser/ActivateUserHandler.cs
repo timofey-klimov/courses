@@ -2,8 +2,10 @@
 using DataAccess.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.User.Exceptions;
 
 namespace UseCases.User.Commands.ActivateUser
 {
@@ -14,20 +16,23 @@ namespace UseCases.User.Commands.ActivateUser
 
         public ActivateUserHandler(ICurrentUserProvider currentUserProvider, IDbContext dbContext)
         {
-            _userProvider = currentUserProvider;
-            _dbContext = dbContext;
+            _userProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         public async Task<Unit> Handle(ActivateUserRequest request, CancellationToken cancellationToken)
         {
-            var currentUser = await _userProvider.GetUserAsync();
+            var userId = _userProvider.GetUserId();
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == currentUser.Id, cancellationToken);
+            var user = await _dbContext.Participants.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
+
+            if (user is null)
+                throw new UserNotFoundException();
 
             var password = Shared.Encription.Sha256Encription.Encript(request.Password);
-            user.Acvivate(password);
+            user.Activate(password);
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
         }

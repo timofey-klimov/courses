@@ -6,8 +6,8 @@ namespace Entities
     public class QuestionWithAnswerOptions : Question
     {
         protected QuestionWithAnswerOptions() { }
-        public QuestionWithAnswerOptions(string title, string content, IEnumerable<AnswerOption> answers) 
-            : base(title, content)
+        public QuestionWithAnswerOptions(string content, int position, IEnumerable<AnswerOption> answers) 
+            : base(content, position)
         {
             _ansewers = answers.ToList();
         }

@@ -3,7 +3,7 @@ using System;
 
 namespace Entities
 {
-    public class AnswerOption : TrackableEntity<Guid>
+    public class AnswerOption : TrackableEntity<long>
     {
         public string Content { get; private set; }
 

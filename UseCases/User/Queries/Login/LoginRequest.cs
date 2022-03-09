@@ -10,9 +10,9 @@ namespace UseCases.User.Queries.Login
 
         public string Password { get; }
 
-        public UserRole Role { get; }
+        public string Role { get; }
 
-        public LoginRequest(string login, string password, UserRole role)
+        public LoginRequest(string login, string password, string role)
         {
             Login = login;
             Password = password;

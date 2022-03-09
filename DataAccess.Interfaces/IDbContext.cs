@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -9,10 +10,11 @@ namespace DataAccess.Interfaces
 {
     public interface IDbContext : IDisposable
     {
-        DbSet<User> Users { get; }
+        DbSet<Participant> Participants { get; }
 
         DbSet<Test> Tests { get; }
 
+        DbSet<UserRole> Roles { get; }
         DatabaseFacade Database { get; }
 
         Task<int> SaveChangesAsync(CancellationToken token = default);

@@ -14,9 +14,9 @@ namespace UseCases.User.Commands.CreateUser
 
         public string Password { get; }
 
-        public UserRole UserRole { get; }
+        public string UserRole { get; }
 
-        public CreateUserRequest(string login, string password, string name, string surname, UserRole role)
+        public CreateUserRequest(string login, string password, string name, string surname, string role)
         {
             Login = login;
             Password = password;

@@ -8,7 +8,6 @@ namespace DataAccess.Implementation.Configurations
     {
         public void Configure(EntityTypeBuilder<QuestionWithTextAnswer> builder)
         {
-            builder.ToTable("QuestionsWithTextAnswer");
         }
     }
 }

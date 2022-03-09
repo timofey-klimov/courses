@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Test.CreateTest;
 using Wep.App.Controllers.Base;
@@ -17,9 +18,9 @@ namespace Wep.App.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ApiResponse> CreateTest([FromBody] CreateTestDto dto)
+        public async Task<ApiResponse> CreateTest([FromBody] CreateTestDto dto, CancellationToken token)
         {
-            var result = await Mediator.Send(new CreateTestRequest(dto.Questions, dto.Title));
+            var result = await Mediator.Send(new CreateTestRequest(dto.Questions, dto.Title), token);
 
             return Ok(result);
         }

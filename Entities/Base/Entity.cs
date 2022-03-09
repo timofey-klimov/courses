@@ -7,6 +7,7 @@ namespace Entities.Base
     public class Entity<T> : DomainEventsEntity
         where T : IEquatable<T>
     {
+
         public T Id { get; private set; }
 
         public override bool Equals(object obj)

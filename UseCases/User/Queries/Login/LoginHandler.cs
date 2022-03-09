@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Shared;
 using Shared.Encription;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,16 +29,21 @@ namespace UseCases.User.Queries.Login
         public async Task<AuthUserDto> Handle(LoginRequest request, CancellationToken cancellationToken)
         {
             var hashPassword = Sha256Encription.Encript(request.Password);
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Login == request.Login && x.HashedPassword == hashPassword);
+            var user = await _dbContext.Participants
+                .Include(x => x.Roles)
+                .FirstOrDefaultAsync(x => x.Login == request.Login && x.HashedPassword == hashPassword);
 
             if (user is null)
                 throw new UserNotFoundException();
 
-            if (user.Role.ToString() != request.Role.ToString())
+            if (!user.Roles.Any(x => x.Role == request.Role))
                 throw new AccessDeniedException();
 
-            return new AuthUserDto(_jwtTokenProvider.CreateToken(new Claim[] { new Claim("id", user.Id.ToString()),
-                                                                                new Claim(ClaimTypes.Role, user.Role.ToString())}), user.IsFirstSignIn);
+            var claims = user.Roles.Select(x => new Claim(ClaimTypes.Role, x.Role))
+                .ToList();
+            claims.Add(new Claim("id", user.Id.ToString()));
+
+            return new AuthUserDto(_jwtTokenProvider.CreateToken(claims), user.State == Entities.Users.States.ActiveState.FirstSign);
         }
     }
 }

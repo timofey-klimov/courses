@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UseCases.User.Commands.CreateUser;
+using UseCases.User.Service;
 using Wep.App.Middlewares;
 
 namespace Wep.App
@@ -41,7 +42,7 @@ namespace Wep.App
             services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
             services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            services.AddScoped<IParticipantFactory, ParticipantFactory>();
 
             var jwtSettings = _cfg.GetSection(nameof(JwtSecuritySettings)).Get<JwtSecuritySettings>();
             var stmpSettings = _cfg.GetSection(nameof(SmtpClientSettings)).Get<SmtpClientSettings>();

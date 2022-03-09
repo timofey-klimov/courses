@@ -3,18 +3,18 @@ using System;
 
 namespace Entities
 {
-    public class Question : TrackableEntity<Guid>
+    public class Question : TrackableEntity<long>
     {
-        public string Title { get; private set; }
+        public int Position { get; private set; }
 
         public string Content { get; private set; }
         
         protected Question() { }
 
-        protected Question(string title, string content)
+        protected Question(string content, int position)
         {
-            Title = title;
             Content = content;
+            Position = position;
         }
     }
 }

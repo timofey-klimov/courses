@@ -1,6 +1,7 @@
 ﻿using Authorization.Interfaces;
 using DataAccess.Interfaces;
 using Entities;
+using Entities.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -29,7 +30,7 @@ namespace UseCases.Test.CreateTest
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            if (!_currentUserProvider.IsAdmin())
+            if (!_currentUserProvider.IsManager())
                 throw new AccessDeniedException();
 
             var requestQuetions = request.Questions ?? new List<QuestionDto>();
@@ -40,25 +41,28 @@ namespace UseCases.Test.CreateTest
             {
                 switch (question.Type)
                 {
-                    case Dto.QuestionTypeDto.WithTextInput:
-                        questions.Add(new QuestionWithTextAnswer(question.Title, question.Content));
+                    case QuestionTypeDto.WithTextInput:
+                        questions.Add(new QuestionWithTextAnswer(question.Content, question.Position));
                         break;
-                    case Dto.QuestionTypeDto.WithFileInput:
-                        questions.Add(new QuestionWithFileAnswer(question.Title, question.Content));
+                    case QuestionTypeDto.WithFileInput:
+                        questions.Add(new QuestionWithFileAnswer(question.Content, question.Position));
                         break;
-                    case Dto.QuestionTypeDto.WithAnswerOptions:
-                        questions.Add(new QuestionWithAnswerOptions(question.Title, question.Content, question.AnswerOptions.Select(x => new AnswerOption(x.Content, x.IsCorrect))));
+                    case QuestionTypeDto.WithAnswerOptions:
+                        questions.Add(new QuestionWithAnswerOptions(question.Content, question.Position, 
+                            question.AnswerOptions.Select(x => new AnswerOption(x.Content, x.IsCorreсt))));
                         break;
                 }
             }
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
+            var createdManager = await _dbContext.Participants
+                .OfType<Manager>()
+                .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
 
-            var test = new Entities.Test(user, request.Title, questions);
+            var test = new Entities.Test(createdManager, request.Title, questions);
 
             _dbContext.Tests.Add(test);
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
 

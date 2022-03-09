@@ -23,9 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization.Interfaces", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization.Impl", "Authorization.Impl\Authorization.Impl.csproj", "{DB342F58-F117-4773-84A2-D105AD510F73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender.Interfaces", "MailSender.Interfaces\MailSender.Interfaces.csproj", "{8D5F88E4-DC73-4358-849D-EA795F4FB11E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.Interfaces", "MailSender.Interfaces\MailSender.Interfaces.csproj", "{8D5F88E4-DC73-4358-849D-EA795F4FB11E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender.Impl", "MailSender.Impl\MailSender.Impl.csproj", "{76A6B3D7-CB5E-4C27-AF2F-F214DAB3D800}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.Impl", "MailSender.Impl\MailSender.Impl.csproj", "{76A6B3D7-CB5E-4C27-AF2F-F214DAB3D800}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

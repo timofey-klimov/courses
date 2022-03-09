@@ -4,7 +4,7 @@
     {
         public string Content { get; set; }
 
-        public bool IsCorrect { get; set; }
+        public bool IsCorreсt { get; set; }
 
     }
 }

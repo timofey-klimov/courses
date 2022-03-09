@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Authorization.Interfaces.Models
+﻿namespace Authorization.Interfaces.Models
 {
-    public enum UserRole
+    public class UserRole
     {
-        Admin,
-        User
+        public string Role { get; }
+
+        public UserRole(string role)
+        {
+            Role = role;
+        }
     }
 }

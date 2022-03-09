@@ -1,26 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Authorization.Interfaces.Models
 {
     public class CurrentUser
     {
-        public Guid Id { get; }
-
         public string Name { get; }
 
         public string Login { get; }
 
         public string Surname { get; }
 
-        public UserRole Role { get; }
+        public IEnumerable<UserRole> Roles { get; }
 
-        public CurrentUser(Guid id, string name, string login, string surname, UserRole role)
+        public CurrentUser(string name, string login, string surname, IEnumerable<UserRole> roles)
         {
-            Id = id;
             Name = name;
             Login = login;
             Surname = surname;
-            Role = role;
+            Roles = roles;
         }
     }
 }

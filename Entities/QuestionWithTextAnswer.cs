@@ -3,8 +3,8 @@
     public class QuestionWithTextAnswer : Question
     {
         protected QuestionWithTextAnswer() { }
-        public QuestionWithTextAnswer(string title, string content)
-            : base(title, content)
+        public QuestionWithTextAnswer(string content, int position)
+            : base(content, position)
         {
 
         }

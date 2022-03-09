@@ -8,13 +8,13 @@ namespace DataAccess.Implementation.Configurations
     {
         public void Configure(EntityTypeBuilder<QuestionWithAnswerOptions> builder)
         {
-            builder.HasMany(x => x.Answers);
+            builder.HasMany(x => x.Answers)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Metadata
                 .FindNavigation(nameof(QuestionWithAnswerOptions.Answers))
                 .SetField("_ansewers");
-
-            builder.ToTable("QuestionsWithAnswerOptions");
         }
     }
 }

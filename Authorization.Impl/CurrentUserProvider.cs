@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Shared;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,13 +33,13 @@ namespace Authorization.Impl
             if (contextUser == null || !contextUser.Identity.IsAuthenticated)
                 return default;
 
-            var id = Guid.Parse(contextUser.Claims.Where(x => x.Type == "id").FirstOrDefault().Value);
+            var id = int.Parse(contextUser.Claims.Where(x => x.Type == "id").FirstOrDefault().Value);
 
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _dbContext.Participants.FirstOrDefaultAsync(x => x.Id == id);
 
-            var role = user.Role.ToEnum<UserRole>();
+            var roles = user.Roles.Select(x => new UserRole(x.Role));
 
-            return new CurrentUser(user.Id, user.Name, user.Login, user.Surname, role);
+            return new CurrentUser(user.Name, user.Login, user.Surname, roles);
         }
 
         /// <summary>
@@ -52,24 +53,11 @@ namespace Authorization.Impl
             if (contextUser == null || !contextUser.Identity.IsAuthenticated)
                 return default;
 
-            var stringRole = contextUser.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault().Value;
+            var roles = contextUser.Claims.Where(x => x.Type == ClaimTypes.Role);
 
-            var role = (UserRole)Enum.Parse(typeof(UserRole), stringRole);
-
-            return role == UserRole.Admin;
+            return roles.Any(x => x.Value == "Admin");
         }
 
-        public UserRole GetUserRole()
-        {
-            var contextUser = _contextAccessor.HttpContext?.User;
-
-            if (contextUser == null || !contextUser.Identity.IsAuthenticated)
-                return default;
-
-            var stringRole = contextUser.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault().Value;
-
-            return (UserRole)Enum.Parse(typeof(UserRole), stringRole);
-        }
 
         /// <summary>
         /// Проверяет прошел ли пользователь аутентификацию 
@@ -82,16 +70,49 @@ namespace Authorization.Impl
             return contextUser != null && contextUser.Identity?.IsAuthenticated == true;
         }
 
-        public Guid GetUserId()
+
+        public bool IsManager()
         {
             var contextUser = _contextAccessor.HttpContext?.User;
 
             if (contextUser == null || !contextUser.Identity.IsAuthenticated)
                 return default;
 
-            var id = Guid.Parse(contextUser.Claims.Where(x => x.Type == "id").FirstOrDefault().Value);
-            return id;
+            var roles = contextUser.Claims.Where(x => x.Type == ClaimTypes.Role);
+
+            return roles.Any(x => x.Value == "Manager");
         }
 
+        public bool IsUser()
+        {
+            var contextUser = _contextAccessor.HttpContext?.User;
+
+            if (contextUser == null || !contextUser.Identity.IsAuthenticated)
+                return default;
+
+            var roles = contextUser.Claims.Where(x => x.Type == ClaimTypes.Role);
+
+            return roles.Any(x => x.Value == "User");
+        }
+
+        public int GetUserId()
+        {
+            var contextUser = _contextAccessor.HttpContext?.User;
+
+            if (contextUser == null || !contextUser.Identity.IsAuthenticated)
+                return default;
+
+            return int.Parse(contextUser.Claims.Where(x => x.Type == "id").FirstOrDefault()?.Value);
+        }
+
+        public IEnumerable<UserRole> GetUserRoles()
+        {
+            var contextUser = _contextAccessor.HttpContext?.User;
+
+            if (contextUser == null || !contextUser.Identity.IsAuthenticated)
+                return default;
+
+            return contextUser.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => new UserRole(x.Value));
+        }
     }
 }

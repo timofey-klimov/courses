@@ -20,7 +20,7 @@ namespace UseCases.User.Queries.GetAllUsers
 
         public async Task<IEnumerable<UserDto>> Handle(GetAllUsersRequest request, CancellationToken cancellationToken)
         {
-            return _dbContext.Users.Select(x => new UserDto { Name = x.Name, Surname = x.Surname,}).ToArray();
+            return _dbContext.Participants.Select(x => new UserDto { Name = x.Name, Surname = x.Surname,}).ToArray();
         }
     }
 }
