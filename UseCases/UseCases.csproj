@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Test\Dto\Create\**" />
+    <EmbeddedResource Remove="Test\Dto\Create\**" />
+    <None Remove="Test\Dto\Create\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="MediatR" Version="10.0.1" />
   </ItemGroup>
 
@@ -14,10 +21,6 @@
     <ProjectReference Include="..\Entities\Entities.csproj" />
     <ProjectReference Include="..\MailSender.Interfaces\MailSender.Interfaces.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Test\Dto\Create\" />
   </ItemGroup>
 
 </Project>

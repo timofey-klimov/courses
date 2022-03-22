@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UseCases.User.Commands.CreateUser;
+using UseCases.User.Profiles;
 using UseCases.User.Service;
 using Wep.App.Middlewares;
 
@@ -43,7 +44,7 @@ namespace Wep.App
             services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IParticipantFactory, ParticipantFactory>();
-
+            services.AddScoped<IFilterProvider, FilterProvider>();
             var jwtSettings = _cfg.GetSection(nameof(JwtSecuritySettings)).Get<JwtSecuritySettings>();
             var stmpSettings = _cfg.GetSection(nameof(SmtpClientSettings)).Get<SmtpClientSettings>();
             services.AddScoped<IMailSender, MailSender.Impl.MailSender>();
@@ -51,6 +52,8 @@ namespace Wep.App
             services.AddSingleton(jwtSettings);
             services.AddControllers();
             services.AddMediatR(typeof(CreateUserRequest).Assembly);
+            services.AddAutoMapper(typeof(UserProfile).Assembly);
+
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new OpenApiInfo() { Title = "API", Version = "v1" });

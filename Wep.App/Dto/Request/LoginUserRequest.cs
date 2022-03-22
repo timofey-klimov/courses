@@ -1,4 +1,5 @@
-﻿using UseCases.Common.User.Model;
+﻿using System.Collections.Generic;
+using UseCases.Common.User.Model;
 
 namespace Wep.App.Dto.Request
 {
@@ -7,7 +8,5 @@ namespace Wep.App.Dto.Request
         public string Login { get; set; }
 
         public string Password { get; set; }
-
-        public string Role { get; set; }
     }
 }

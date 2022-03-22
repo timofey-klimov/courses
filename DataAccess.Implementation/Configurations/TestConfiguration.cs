@@ -31,8 +31,6 @@ namespace DataAccess.Implementation.Configurations
                 .FindNavigation(nameof(Test.Questions))
                 .SetField("_questions");
 
-            builder.Ignore(x => x.Events);
-
             builder.ToTable("Tests");
 
         }

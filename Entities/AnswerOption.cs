@@ -3,7 +3,7 @@ using System;
 
 namespace Entities
 {
-    public class AnswerOption : TrackableEntity<long>
+    public class AnswerOption : AuditableEntity<long>
     {
         public string Content { get; private set; }
 

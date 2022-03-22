@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Shared.Encription;
 
 namespace DataAccess.Implementation.Migrations
 {
@@ -20,7 +21,9 @@ namespace DataAccess.Implementation.Migrations
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ParticipantType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "getdate()"),
-                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,7 +52,8 @@ namespace DataAccess.Implementation.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     CreateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "getdate()"),
-                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -86,23 +90,22 @@ namespace DataAccess.Implementation.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-
             migrationBuilder.InsertData(
                 table: "UserRoles",
                 columns: new[] { "Role" },
                 values: new object[,]
                 {
-                    { "Admin" },
+                    { "User" },
                     { "Manager" },
-                    { "User" }
+                    { "Admin" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Participants",
-                columns: new[] { "Login", "Name", "Surname", "HashedPassword", "State", "ParticipantType", "CreateDate", "UpdateDate" },
+                columns: new[] { "Login", "Name", "Surname", "HashedPassword", "State", "ParticipantType", "CreateDate", "UpdateDate", "UpdatedBy", "CreatedBy" },
                 values: new object[,]
                 {
-                    { "admin@admin.ru", "admin", "admin" ,Shared.Encription.Sha256Encription.Encript("admin"), "PasswordChanged", "Admin", DateTime.Now, null}
+                    { "admin@admin.ru", "admin", "admin", Sha256Encription.Encript("admin"), "PasswordChanged", "Admin", DateTime.Now, null, null, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -110,7 +113,7 @@ namespace DataAccess.Implementation.Migrations
                 columns: new[] { "ParticipantsId", "RolesId" },
                 values: new object[,]
                 {
-                    { 1,1 }
+                    { 1, 3 }
                 });
 
             migrationBuilder.CreateTable(
@@ -124,7 +127,9 @@ namespace DataAccess.Implementation.Migrations
                     Questiontype = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TestId = table.Column<int>(type: "int", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "getdate()"),
-                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,7 +152,9 @@ namespace DataAccess.Implementation.Migrations
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
                     QuestionWithAnswerOptionsId = table.Column<long>(type: "bigint", nullable: true),
                     CreateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: false, defaultValueSql: "getdate()"),
-                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true)
+                    UpdateDate = table.Column<DateTime>(type: "datetime2(0)", nullable: true),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true),
+                    CreatedBy = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

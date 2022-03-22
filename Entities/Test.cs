@@ -1,13 +1,12 @@
 ﻿using Entities.Base;
 using Entities.Exceptions;
 using Entities.Users;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Entities
 {
-    public class Test : TrackableEntity<int>
+    public class Test : AuditableEntity<int>
     {
         public string Title { get; private set; }
 

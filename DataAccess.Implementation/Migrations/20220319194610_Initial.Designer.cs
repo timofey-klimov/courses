@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Implementation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220309163139_Initial")]
+    [Migration("20220319194610_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,9 @@ namespace DataAccess.Implementation.Migrations
                         .HasColumnType("datetime2(0)")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
@@ -45,6 +48,9 @@ namespace DataAccess.Implementation.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -69,6 +75,9 @@ namespace DataAccess.Implementation.Migrations
                         .HasColumnType("datetime2(0)")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
                     b.Property<int>("Position")
                         .HasColumnType("int");
 
@@ -81,6 +90,9 @@ namespace DataAccess.Implementation.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -112,6 +124,9 @@ namespace DataAccess.Implementation.Migrations
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
 
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -130,6 +145,9 @@ namespace DataAccess.Implementation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2(0)")
                         .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
 
                     b.Property<string>("HashedPassword")
                         .IsRequired()
@@ -157,6 +175,9 @@ namespace DataAccess.Implementation.Migrations
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

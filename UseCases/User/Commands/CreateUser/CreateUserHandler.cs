@@ -1,10 +1,8 @@
 ﻿using Authorization.Interfaces;
 using DataAccess.Interfaces;
-using Entities;
 using Entities.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared;
 using Shared.Encription;
 using System;
 using System.Threading;

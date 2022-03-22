@@ -15,8 +15,6 @@ namespace DataAccess.Implementation.Configurations.Users
         {
             builder.HasKey(x => x.Id);
 
-            builder.Ignore(x => x.Events);
-
             builder.HasMany(x => x.Participants)
                 .WithMany(x => x.Roles);
 

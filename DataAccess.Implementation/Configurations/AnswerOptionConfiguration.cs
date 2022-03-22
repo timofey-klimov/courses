@@ -24,7 +24,6 @@ namespace DataAccess.Implementation.Configurations
             builder.Property(x => x.IsCorrect)
                 .IsRequired();
 
-            builder.Ignore(x => x.Events);
             builder.ToTable("AnswerOptions");
         }
     }

@@ -2,20 +2,18 @@
 using DataAccess.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared;
 using Shared.Encription;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using UseCases.Common.Exceptions;
 using UseCases.Common.User.Exceptions;
 using UseCases.User.Dto;
 
 namespace UseCases.User.Queries.Login
 {
-    public class LoginHandler : IRequestHandler<LoginRequest, AuthUserDto>
+    public class LoginHandler : IRequestHandler<LoginRequest, LoginResultDto>
     {
         private readonly IDbContext _dbContext;
         private readonly IJwtTokenProvider _jwtTokenProvider;
@@ -26,7 +24,7 @@ namespace UseCases.User.Queries.Login
             _jwtTokenProvider = jwtTokenProvider ?? throw new ArgumentNullException(nameof(jwtTokenProvider));
         }
 
-        public async Task<AuthUserDto> Handle(LoginRequest request, CancellationToken cancellationToken)
+        public async Task<LoginResultDto> Handle(LoginRequest request, CancellationToken cancellationToken)
         {
             var hashPassword = Sha256Encription.Encript(request.Password);
             var user = await _dbContext.Participants
@@ -36,14 +34,12 @@ namespace UseCases.User.Queries.Login
             if (user is null)
                 throw new UserNotFoundException();
 
-            if (!user.Roles.Any(x => x.Role == request.Role))
-                throw new AccessDeniedException();
-
             var claims = user.Roles.Select(x => new Claim(ClaimTypes.Role, x.Role))
                 .ToList();
             claims.Add(new Claim("id", user.Id.ToString()));
 
-            return new AuthUserDto(_jwtTokenProvider.CreateToken(claims), user.State == Entities.Users.States.ActiveState.FirstSign);
+            return new LoginResultDto(_jwtTokenProvider.CreateToken(claims), 
+                new UserDto(user.Name, user.Surname, user.Login, user.Roles.Select(x => x.Role), user.State == Entities.Users.States.ActiveState.FirstSign));
         }
     }
 }

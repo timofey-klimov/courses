@@ -1,13 +1,11 @@
 ﻿using Entities.Events;
 using System;
-using System.Collections.Generic;
 
 namespace Entities.Base
 {
-    public class Entity<T> : DomainEventsEntity
+    public abstract class Entity<T> : BaseEntity
         where T : IEquatable<T>
     {
-
         public T Id { get; private set; }
 
         public override bool Equals(object obj)

@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using Authorization.Interfaces;
+using DataAccess.Interfaces;
 using Entities;
 using Entities.Base;
 using Entities.Events;
@@ -18,12 +19,14 @@ namespace DataAccess.Implementation
     {
         private readonly IMediator _mediatr;
         private readonly ILogger<AppDbContext> _logger;
+        private readonly ICurrentUserProvider _userProvider;
 
-        public AppDbContext(DbContextOptions<AppDbContext> opts, IMediator mediator, ILogger<AppDbContext> logger)
+        public AppDbContext(DbContextOptions<AppDbContext> opts, IMediator mediator, ILogger<AppDbContext> logger, ICurrentUserProvider userProvider)
             : base(opts)
         {
             _mediatr = mediator;
             _logger = logger;
+            _userProvider = userProvider;
         }
 
         public DbSet<Participant> Participants { get; set; }
@@ -43,12 +46,29 @@ namespace DataAccess.Implementation
 
             var entites = this.ChangeTracker.Entries()
                 .Select(x => x.Entity)
-                .OfType<DomainEventsEntity>();
+                .OfType<IDomainEventProvider>();
+
 
             foreach (var entity in entites)
             {
                 events.AddRange(entity?.Events);
                 entity.Events?.Clear();
+            }
+
+            var auditableEntites = this.ChangeTracker
+                .Entries<IAutitableEntity>();
+
+            foreach (var entityEntry in auditableEntites)
+            {
+                if (entityEntry.State == EntityState.Added)
+                {
+                    entityEntry.Entity.Create(_userProvider.GetUserId());
+                }
+
+                if (entityEntry.State == EntityState.Modified)
+                {
+                    entityEntry.Entity.Update(_userProvider.GetUserId());
+                }
             }
 
             var result = await base.SaveChangesAsync(cancellationToken);

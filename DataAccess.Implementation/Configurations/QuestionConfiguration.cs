@@ -16,8 +16,6 @@ namespace DataAccess.Implementation.Configurations
                 .HasDefaultValueSql("getdate()")
                 .IsRequired();
 
-            builder.Ignore(x => x.Events);
-
             builder.Property(x => x.UpdateDate)
                 .HasColumnType("datetime2(0)");
 

@@ -1,16 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using UseCases.Common.User.Model;
+using UseCases.Common.Dto;
 using UseCases.User.Commands.ActivateUser;
 using UseCases.User.Commands.CreateUser;
 using UseCases.User.Dto;
 using UseCases.User.Queries.CheckLoginAvailable;
-using UseCases.User.Queries.GetAllUsers;
-using UseCases.User.Queries.GetUserRole;
+using UseCases.User.Queries.GetUser;
+using UseCases.User.Queries.GetUserForPagination;
 using UseCases.User.Queries.Login;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request;
@@ -27,9 +26,9 @@ namespace Wep.App.Controllers
         }
 
         [HttpPost("sign-in")]
-        public async Task<ApiResponse<AuthUserDto>> Login([FromBody] LoginUserRequest request, CancellationToken token)
+        public async Task<ApiResponse<LoginResultDto>> Login([FromBody] LoginUserRequest request, CancellationToken token)
         {
-            var result = await Mediator.Send(new LoginRequest(request.Login, request.Password, request.Role), token);
+            var result = await Mediator.Send(new LoginRequest(request.Login, request.Password), token);
             return Ok(result);
         }
 
@@ -49,13 +48,6 @@ namespace Wep.App.Controllers
             return Ok();
         }
 
-        [Authorize]
-        [HttpGet("get-all")]
-        public async Task<ApiResponse<IEnumerable<UserDto>>> GetAll()
-        {
-            var result = await Mediator.Send(new GetAllUsersRequest());
-            return Ok(result);
-        }
 
         [Authorize]
         [HttpPost("login-available")]
@@ -66,10 +58,17 @@ namespace Wep.App.Controllers
         }
 
         [Authorize]
-        [HttpGet("user-role")]
-        public async Task<ApiResponse<IEnumerable<string>>> GetUserRole(CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<ApiResponse<UserDto>> GetUser(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetUserRoleRequest(), cancellationToken);
+            return Ok(await Mediator.Send(new GetUserRequest(), cancellationToken));
+        }
+
+        [Authorize]
+        [HttpGet("all")]
+        public async Task<ApiResponse<Pagination<PaginationUserDto>>> GetUsers([FromQuery] FilterUserRequest filter, CancellationToken token)
+        {
+            var result = await Mediator.Send(new GetUsersForPaginationRequest(filter.Offset, filter.Limit, filter.Name, filter.Surname, filter.Login), token);
 
             return Ok(result);
         }

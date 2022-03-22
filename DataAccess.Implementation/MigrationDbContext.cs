@@ -11,7 +11,7 @@ namespace DataAccess.Implementation
             var optBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optBuilder.UseSqlServer("Server=DESKTOP-JDVB3O9\\SQLEXPRESS;Database=Courses;Trusted_Connection=True;");
 
-            return new AppDbContext(optBuilder.Options, default, new Logger<AppDbContext>(new LoggerFactory()));
+            return new AppDbContext(optBuilder.Options, default, new Logger<AppDbContext>(new LoggerFactory()), default);
         }
     }
 }

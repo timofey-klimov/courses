@@ -1,13 +1,7 @@
-﻿using Authorization.Interfaces.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Authorization.Interfaces
+﻿namespace Authorization.Interfaces
 {
     public interface ICurrentUserProvider
     {
-        Task<CurrentUser> GetUserAsync();
-
         bool IsAuth();
 
         bool IsAdmin();
@@ -17,7 +11,5 @@ namespace Authorization.Interfaces
         bool IsUser();
 
         int GetUserId();
-
-        IEnumerable<UserRole> GetUserRoles();
     }
 }

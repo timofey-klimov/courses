@@ -1,4 +1,5 @@
 ﻿using Entities.Base;
+using Entities.Events;
 using Entities.Events.User;
 using Entities.Exceptions;
 using Entities.Users.States;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Entities.Users
 {
-    public class Participant : TrackableEntity<int>
+    public class Participant : AuditableEntity<int>, IDomainEventProvider
     {
         public string Login { get; private set; }
 
@@ -23,8 +24,11 @@ namespace Entities.Users
 
         public ICollection<UserRole> Roles { get; private set; }
 
+        public ICollection<DomainEvent> Events { get; private set; }
+
         protected Participant() 
         {
+            Events = new List<DomainEvent>();
             ActivasionState = new Lazy<ActivationState>(() => ActivationState.Create(State));
         }
 
@@ -45,7 +49,6 @@ namespace Entities.Users
             ActivasionState.Value.ChangePassword(hashedPassword, this);
 
             State = ActiveState.PasswordChanged;
-            UpdateEntity();
         }
 
         public void ChangePassword(string hashedPassword)

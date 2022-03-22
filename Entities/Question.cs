@@ -3,7 +3,7 @@ using System;
 
 namespace Entities
 {
-    public class Question : TrackableEntity<long>
+    public class Question : AuditableEntity<long>
     {
         public int Position { get; private set; }
 
