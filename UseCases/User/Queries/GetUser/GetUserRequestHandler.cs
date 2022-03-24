@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.Exceptions;
 using UseCases.User.Dto;
 
 namespace UseCases.User.Queries.GetUser
@@ -26,7 +27,10 @@ namespace UseCases.User.Queries.GetUser
                 .Include(x => x.Roles)
                 .FirstOrDefaultAsync(x => x.Id == userId);
 
-            return new UserDto(user.Name, user.Surname, user.Login, user.Roles.Select(x => x.Role), user.State == Entities.Users.States.ActiveState.FirstSign);
+            if (user.IsBlocked())
+                throw new UserBlockedException();
+
+            return new UserDto(user.Name, user.Surname, user.Login, user.Roles.Select(x => x.Role), user.GetState());
         }
     }
 }

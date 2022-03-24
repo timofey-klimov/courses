@@ -39,7 +39,7 @@ namespace UseCases.User.Queries.Login
             claims.Add(new Claim("id", user.Id.ToString()));
 
             return new LoginResultDto(_jwtTokenProvider.CreateToken(claims), 
-                new UserDto(user.Name, user.Surname, user.Login, user.Roles.Select(x => x.Role), user.State == Entities.Users.States.ActiveState.FirstSign));
+                new UserDto(user.Name, user.Surname, user.Login, user.Roles.Select(x => x.Role), user.GetState()));
         }
     }
 }

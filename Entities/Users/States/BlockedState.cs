@@ -1,27 +1,27 @@
-﻿using Entities.Exceptions;
+﻿using System;
 
 namespace Entities.Users.States
 {
-    public class ActiveState : State
+    public class BlockedState : State
     {
-        public ActiveState(Participant participant)
+        public BlockedState(Participant participant) 
             : base(participant)
         {
         }
 
         public override void Activate(string hashedPassword)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void BlockParticipant()
         {
-            ChangeState(ParticipantState.Blocked);
+            throw new NotImplementedException();
         }
 
         public override void UnBlockParticipant()
         {
-            throw new System.NotImplementedException();
+            ChangeState(ParticipantState.Active);
         }
     }
 }

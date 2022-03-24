@@ -31,8 +31,13 @@ namespace DataAccess.Implementation.Configurations.Users
             builder.Property(x => x.UpdateDate)
                 .HasColumnType("datetime2(0)");
 
+
             builder.Property(x => x.State)
-                .HasConversion(x => x.ToString(), x => (ActiveState)Enum.Parse(typeof(ActiveState), x));
+                .HasConversion(x => x.ToString(), x => (ParticipantState)Enum.Parse(typeof(ParticipantState), x));
+
+            builder.Metadata.FindProperty("State")
+                .SetField("_state");
+                
 
             builder.Ignore(x => x.ActivasionState);
             builder.Ignore(x => x.Events);

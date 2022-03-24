@@ -105,7 +105,7 @@ namespace DataAccess.Implementation.Migrations
                 columns: new[] { "Login", "Name", "Surname", "HashedPassword", "State", "ParticipantType", "CreateDate", "UpdateDate", "UpdatedBy", "CreatedBy" },
                 values: new object[,]
                 {
-                    { "admin@admin.ru", "admin", "admin", Sha256Encription.Encript("admin"), "PasswordChanged", "Admin", DateTime.Now, null, null, 1 }
+                    { "admin@admin.ru", "admin", "admin", Sha256Encription.Encript("admin"), "Active", "Admin", DateTime.Now, null, null, 1 }
                 });
 
             migrationBuilder.InsertData(

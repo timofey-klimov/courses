@@ -1,17 +1,19 @@
 ﻿using Entities.Exceptions;
+using System;
 
 namespace Entities.Users.States
 {
-    public class ActiveState : State
+    public class CreatedState : State
     {
-        public ActiveState(Participant participant)
+        public CreatedState(Participant participant) 
             : base(participant)
         {
         }
 
         public override void Activate(string hashedPassword)
         {
-            throw new System.NotImplementedException();
+            Participant.ChangePassword(hashedPassword);
+            ChangeState(ParticipantState.Active);
         }
 
         public override void BlockParticipant()
@@ -21,7 +23,7 @@ namespace Entities.Users.States
 
         public override void UnBlockParticipant()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

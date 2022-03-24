@@ -5,13 +5,13 @@ namespace UseCases.User.Dto
     public class UserDto
     {
         private UserDto() { }
-        public UserDto(string name, string surname, string login, IEnumerable<string> roles, bool isFirstSign)
+        public UserDto(string name, string surname, string login, IEnumerable<string> roles, string state)
         {
             Name = name;
             Surname = surname;
             Login = login;
             Roles = roles;
-            IsFirstSign = isFirstSign;
+            State = state;
         }
 
         public string Name { get; }
@@ -22,6 +22,6 @@ namespace UseCases.User.Dto
 
         public IEnumerable<string> Roles { get; }
 
-        public bool IsFirstSign { get; }
+        public string State { get; }
     }
 }

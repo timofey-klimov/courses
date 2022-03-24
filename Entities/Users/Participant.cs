@@ -3,7 +3,6 @@ using Entities.Events;
 using Entities.Events.User;
 using Entities.Exceptions;
 using Entities.Users.States;
-using System;
 using System.Collections.Generic;
 
 namespace Entities.Users
@@ -18,9 +17,14 @@ namespace Entities.Users
 
         public string HashedPassword { get; private set; }
 
-        public Lazy<ActivationState> ActivasionState { get; private set; }
+        private ParticipantState _state;
 
-        public ActiveState State { get; private set; }
+        public ParticipantState State => _state;
+
+        public State ActivasionState
+        {
+            get { return States.State.Create(_state, this); }
+        }
 
         public ICollection<UserRole> Roles { get; private set; }
 
@@ -29,7 +33,7 @@ namespace Entities.Users
         protected Participant() 
         {
             Events = new List<DomainEvent>();
-            ActivasionState = new Lazy<ActivationState>(() => ActivationState.Create(State));
+            
         }
 
         public Participant(string login, string name, string surname, string password, string hashedPassword, UserRole role) 
@@ -39,16 +43,19 @@ namespace Entities.Users
             Name = name;
             Surname = surname;
             HashedPassword = hashedPassword;
-            State = ActiveState.FirstSign;
+            _state = ParticipantState.Created;
             Events.Add(new UserCreatedEvent(login, password));
             Roles = new List<UserRole>() { role };
         }
 
         public void Activate(string hashedPassword)
         {
-            ActivasionState.Value.ChangePassword(hashedPassword, this);
+            ActivasionState.Activate(hashedPassword);
+        }
 
-            State = ActiveState.PasswordChanged;
+        public void Block()
+        {
+            ActivasionState.BlockParticipant();
         }
 
         public void ChangePassword(string hashedPassword)
@@ -59,5 +66,11 @@ namespace Entities.Users
             HashedPassword = hashedPassword;
         }
 
+        public string GetState()
+        {
+            return State.ToString();
+        }
+
+        public bool IsBlocked() => _state == ParticipantState.Blocked;
     }
 }

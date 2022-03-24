@@ -8,6 +8,7 @@
         AccessDenied = 103,
         PasswordMatches = 104,
         QuestionAlreadyExist = 105,
-        UserAlreadyActive = 106
+        UserAlreadyActive = 106,
+        UserBlocked = 107
     }
 }

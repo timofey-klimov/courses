@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
 using UseCases.User.Commands.ActivateUser;
+using UseCases.User.Commands.BlockUserCommand;
 using UseCases.User.Commands.CreateUser;
 using UseCases.User.Dto;
 using UseCases.User.Queries.CheckLoginAvailable;
@@ -32,7 +33,7 @@ namespace Wep.App.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost("sign-up")]
         public async Task<ApiResponse> Register([FromBody] RegisterUserRequest request, CancellationToken token)
         {
@@ -58,19 +59,28 @@ namespace Wep.App.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("info")]
         public async Task<ApiResponse<UserDto>> GetUser(CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetUserRequest(), cancellationToken));
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpGet("all")]
         public async Task<ApiResponse<Pagination<PaginationUserDto>>> GetUsers([FromQuery] FilterUserRequest filter, CancellationToken token)
         {
             var result = await Mediator.Send(new GetUsersForPaginationRequest(filter.Offset, filter.Limit, filter.Name, filter.Surname, filter.Login), token);
 
             return Ok(result);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("block/{id}")]
+        public async Task<ApiResponse> BlockUser(int id, CancellationToken token)
+        {
+            await Mediator.Send(new BlockUserRequest(id), token);
+
+            return Ok();
         }
     }
 }
