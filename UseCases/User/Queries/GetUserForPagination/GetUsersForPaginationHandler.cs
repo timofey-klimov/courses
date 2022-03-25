@@ -35,7 +35,7 @@ namespace UseCases.User.Queries.GetUserForPagination
 
         public async Task<Pagination<PaginationUserDto>> Handle(GetUsersForPaginationRequest request, CancellationToken cancellationToken)
         {
-            var spec = new UserFilterSpecification(request.Name, request.Surname, request.Login);
+            var spec = new UserFilterSpecification(request.Name, request.Surname, request.Login, true);
 
             var baseQuery =  _dbContext
                 .Participants

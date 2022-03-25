@@ -9,12 +9,14 @@ namespace DataAccess.Interfaces.Specifications.User
         private readonly string _name;
         private readonly string _surname;
         private readonly string _login;
+        private readonly bool _isOnlyActive;
 
-        public UserFilterSpecification(string name, string surname, string login)
+        public UserFilterSpecification(string name, string surname, string login, bool isOnlyActive)
         {
             _name = name;
             _surname = surname;
             _login = login;
+            _isOnlyActive = isOnlyActive;
         }
 
         public override Expression<Func<Entities.Users.User, bool>> CreateCriteria()
@@ -36,6 +38,12 @@ namespace DataAccess.Interfaces.Specifications.User
             {
                 var spec = new UserLoginSpecification(_login);
                 compositSpec = compositSpec == null ? spec : compositSpec.Or(spec);
+            }
+
+            if (_isOnlyActive)
+            {
+                var spec = new OnlyActiveUserSpecification();
+                compositSpec = compositSpec == null ? spec : compositSpec.And(spec);
             }
 
             return compositSpec?.CreateCriteria();

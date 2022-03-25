@@ -3,10 +3,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.User.Dto;
 
 namespace UseCases.User.Commands.BlockUserCommand
 {
-    public class BlockUserCommandHandler : IRequestHandler<BlockUserRequest>
+    public class BlockUserCommandHandler : IRequestHandler<BlockUserRequest, int>
     {
         public readonly IDbContext _dbContext;
         public BlockUserCommandHandler(IDbContext dbContext)
@@ -14,7 +15,7 @@ namespace UseCases.User.Commands.BlockUserCommand
             _dbContext = dbContext;
         }
 
-        public async Task<Unit> Handle(BlockUserRequest request, CancellationToken cancellationToken)
+        public async Task<int> Handle(BlockUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Participants.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -22,8 +23,7 @@ namespace UseCases.User.Commands.BlockUserCommand
 
             await _dbContext.SaveChangesAsync();
 
-            return Unit.Value;
-
+            return user.Id;
         }
     }
 }

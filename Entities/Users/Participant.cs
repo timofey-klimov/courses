@@ -53,10 +53,10 @@ namespace Entities.Users
             ActivasionState.Activate(hashedPassword);
         }
 
-        public void Block()
-        {
-            ActivasionState.BlockParticipant();
-        }
+        public void Block() => ActivasionState.BlockParticipant();
+       
+        public void Unblock() => ActivasionState.UnBlockParticipant();
+
 
         public void ChangePassword(string hashedPassword)
         {

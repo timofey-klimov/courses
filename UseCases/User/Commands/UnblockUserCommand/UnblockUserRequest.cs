@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UseCases.User.Dto;
 
-namespace UseCases.User.Commands.BlockUserCommand
+namespace UseCases.User.Commands.UnblockUserCommand
 {
-    public class BlockUserRequest : IRequest<int>
+    public class UnblockUserRequest : IRequest<int>
     {
         public int Id { get; }
 
-        public BlockUserRequest(int id) => Id = id;
+        public UnblockUserRequest(int id) => Id = id;
+       
     }
 }

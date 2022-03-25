@@ -52,7 +52,7 @@ namespace Wep.App
             services.AddSingleton(jwtSettings);
             services.AddControllers();
             services.AddMediatR(typeof(CreateUserRequest).Assembly);
-            services.AddAutoMapper(typeof(UserProfile).Assembly);
+            services.AddAutoMapper(typeof(ParticipantProfile).Assembly);
 
             services.AddSwaggerGen(x =>
             {

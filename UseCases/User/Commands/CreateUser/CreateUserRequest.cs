@@ -4,7 +4,7 @@ using UseCases.User.Dto;
 
 namespace UseCases.User.Commands.CreateUser
 {
-    public class CreateUserRequest : IRequest
+    public class CreateUserRequest : IRequest<PaginationUserDto>
     {
         public string Name { get; }
 

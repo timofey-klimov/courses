@@ -7,6 +7,7 @@ using UseCases.Common.Dto;
 using UseCases.User.Commands.ActivateUser;
 using UseCases.User.Commands.BlockUserCommand;
 using UseCases.User.Commands.CreateUser;
+using UseCases.User.Commands.UnblockUserCommand;
 using UseCases.User.Dto;
 using UseCases.User.Queries.CheckLoginAvailable;
 using UseCases.User.Queries.GetUser;
@@ -35,10 +36,10 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("sign-up")]
-        public async Task<ApiResponse> Register([FromBody] RegisterUserRequest request, CancellationToken token)
+        public async Task<ApiResponse<PaginationUserDto>> Register([FromBody] RegisterUserRequest request, CancellationToken token)
         {
-            await Mediator.Send(new CreateUserRequest(request.Login, request.Password, request.Name, request.Surname, request.Role), token);
-            return Ok();
+            var result = await Mediator.Send(new CreateUserRequest(request.Login, request.Password, request.Name, request.Surname, request.Role), token);
+            return Ok(result);
         }
 
         [Authorize]
@@ -76,11 +77,20 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("block/{id}")]
-        public async Task<ApiResponse> BlockUser(int id, CancellationToken token)
+        public async Task<ApiResponse<int>> BlockUser(int id, CancellationToken token)
         {
-            await Mediator.Send(new BlockUserRequest(id), token);
+            var resultId = await Mediator.Send(new BlockUserRequest(id), token);
 
-            return Ok();
+            return Ok(resultId);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("unblock/{id}")]
+        public async Task<ApiResponse<int>> UnblockUser(int id, CancellationToken token)
+        {
+            var resultId = await Mediator.Send(new UnblockUserRequest(id), token);
+
+            return Ok(resultId);
         }
     }
 }

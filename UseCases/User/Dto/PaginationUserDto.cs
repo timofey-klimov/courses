@@ -9,5 +9,7 @@
 
         public string Surname { get; set; }
 
+        public string State { get; set; }
+
     }
 }
