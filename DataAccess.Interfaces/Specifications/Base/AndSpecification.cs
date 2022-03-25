@@ -1,6 +1,5 @@
 ﻿using Entities.Base;
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace DataAccess.Interfaces.Specifications.Base

@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
-using UseCases.Common.Exceptions;
 using UseCases.User.Dto;
 
 namespace UseCases.User.Queries.GetUserForPagination
@@ -35,7 +34,7 @@ namespace UseCases.User.Queries.GetUserForPagination
 
         public async Task<Pagination<PaginationUserDto>> Handle(GetUsersForPaginationRequest request, CancellationToken cancellationToken)
         {
-            var spec = new UserFilterSpecification(request.Name, request.Surname, request.Login, true);
+            var spec = new UserFilterSpecification(request.Name, request.Surname, request.Login, request.IsOnlyActive);
 
             var baseQuery =  _dbContext
                 .Participants

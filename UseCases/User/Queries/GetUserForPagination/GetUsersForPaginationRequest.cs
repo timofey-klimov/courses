@@ -16,13 +16,16 @@ namespace UseCases.User.Queries.GetUserForPagination
 
         public string Login { get; }
 
-        public GetUsersForPaginationRequest(int offset, int limit, string name, string surname, string login)
+        public bool IsOnlyActive { get; }
+
+        public GetUsersForPaginationRequest(int offset, int limit, string name, string surname, string login, bool isOnlyActive)
         {
             Offset = offset;
             Limit = limit;
             Name = name;
             Surname = surname;
             Login = login;
+            IsOnlyActive = isOnlyActive;
         }
 
     }

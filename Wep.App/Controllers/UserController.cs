@@ -70,7 +70,7 @@ namespace Wep.App.Controllers
         [HttpGet("all")]
         public async Task<ApiResponse<Pagination<PaginationUserDto>>> GetUsers([FromQuery] FilterUserRequest filter, CancellationToken token)
         {
-            var result = await Mediator.Send(new GetUsersForPaginationRequest(filter.Offset, filter.Limit, filter.Name, filter.Surname, filter.Login), token);
+            var result = await Mediator.Send(new GetUsersForPaginationRequest(filter.Offset, filter.Limit, filter.Name, filter.Surname, filter.Login, filter.IsOnlyActive), token);
 
             return Ok(result);
         }
