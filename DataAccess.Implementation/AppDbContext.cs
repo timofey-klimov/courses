@@ -3,7 +3,7 @@ using DataAccess.Interfaces;
 using Entities;
 using Entities.Base;
 using Entities.Events;
-using Entities.Users;
+using Entities.Participants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,7 +33,7 @@ namespace DataAccess.Implementation
 
         public DbSet<Test> Tests { get; set; }
 
-        public DbSet<UserRole> Roles { get; set; }
+        public DbSet<ParticipantRole> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

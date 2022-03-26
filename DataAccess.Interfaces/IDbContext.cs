@@ -1,5 +1,5 @@
 ﻿using Entities;
-using Entities.Users;
+using Entities.Participants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
@@ -14,7 +14,7 @@ namespace DataAccess.Interfaces
 
         DbSet<Test> Tests { get; }
 
-        DbSet<UserRole> Roles { get; }
+        DbSet<ParticipantRole> Roles { get; }
         DatabaseFacade Database { get; }
 
         Task<int> SaveChangesAsync(CancellationToken token = default);

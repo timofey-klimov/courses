@@ -1,5 +1,5 @@
-﻿using Entities.Users;
-using Entities.Users.States;
+﻿using Entities.Participants;
+using Entities.Participants.States;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -42,13 +42,11 @@ namespace DataAccess.Implementation.Configurations.Users
             builder.Ignore(x => x.ActivasionState);
             builder.Ignore(x => x.Events);
 
-            builder.HasMany(x => x.Roles)
-                .WithMany(x => x.Participants);
 
             builder.HasDiscriminator<string>("ParticipantType")
                 .HasValue<Admin>("Admin")
-                .HasValue<Manager>("Manager")
-                .HasValue<User>("User");
+                .HasValue<Teacher>("Teacher")
+                .HasValue<Student>("Student");
 
             builder.ToTable("Participants");
         }

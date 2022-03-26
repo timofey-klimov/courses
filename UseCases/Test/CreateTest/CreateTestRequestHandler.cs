@@ -1,7 +1,7 @@
 ﻿using Authorization.Interfaces;
 using DataAccess.Interfaces;
 using Entities;
-using Entities.Users;
+using Entities.Participants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -54,11 +54,7 @@ namespace UseCases.Test.CreateTest
                 }
             }
 
-            var createdManager = await _dbContext.Participants
-                .OfType<Manager>()
-                .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
-
-            var test = new Entities.Test(createdManager, request.Title, questions);
+            var test = new Entities.Test(request.Title, questions);
 
             _dbContext.Tests.Add(test);
 

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DataAccess.Implementation.Configurations.Users
 {
-    public class AdminConfiguration : IEntityTypeConfiguration<Admin>
+    public class StudentConfiguration : IEntityTypeConfiguration<Student>
     {
-        public void Configure(EntityTypeBuilder<Admin> builder)
+        public void Configure(EntityTypeBuilder<Student> builder)
         {
         }
     }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace Wep.App.Controllers
         {
         }
 
+
+        [Authorize(Roles = "Teacher")]
         [HttpPost("create")]
         public async Task<ApiResponse> CreateTest([FromBody] CreateTestDto dto, CancellationToken token)
         {

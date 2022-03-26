@@ -2,13 +2,13 @@
 {
     public enum ExceptionCodes : int
     {
-        UserExisted = 100,
+        ParticipantExisted = 100,
         LoginIsNotAvailable = 101,
-        UserNotFound = 102,
+        ParticipantNotFound = 102,
         AccessDenied = 103,
         PasswordMatches = 104,
         QuestionAlreadyExist = 105,
-        UserAlreadyActive = 106,
-        UserBlocked = 107
+        ParticipantAlreadyActive = 106,
+        ParticipantBlocked = 107
     }
 }

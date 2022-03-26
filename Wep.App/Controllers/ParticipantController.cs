@@ -1,0 +1,79 @@
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using UseCases.Common.Dto;
+using UseCases.Participant.Commands.ActivateParticipantCommand;
+using UseCases.Participant.Commands.BlockParticipantCommand;
+using UseCases.Participant.Commands.CreateParticipantCommand;
+using UseCases.Participant.Commands.UnblockParticipantCommand;
+using UseCases.Participant.Dto;
+using UseCases.Participant.Queries.GetParticipantInfoQuery;
+using UseCases.Participant.Queries.GetParticipantsQuery;
+using Wep.App.Controllers.Base;
+using Wep.App.Dto.Request.Participant;
+using Wep.App.Dto.Responses;
+
+namespace Wep.App.Controllers
+{
+    public class ParticipantController : ApplicationController
+    {
+        public ParticipantController(IMediator mediator) 
+            : base(mediator)
+        {
+        }
+
+
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("sign-up")]
+        public async Task<ApiResponse<ParticipantDto>> Create([FromBody] CreateParticipantDto request, CancellationToken token)
+        {
+            var result = await Mediator.Send(new CreateParticipantRequest(request.Login, request.Password, request.Name, request.Surname, request.UserRole), token);
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("activate")]
+        public async Task<ApiResponse> Activate([FromBody] ActivateParticipantDto request, CancellationToken token)
+        {
+            await Mediator.Send(new ActivateParticipantRequest(request.Password), token);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("info")]
+        public async Task<ApiResponse<ParticipantDto>> GetInfo(CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new GetParticipantInfoRequest(), token));
+        }
+
+        [Authorize(Roles = "Admin, Teacher")]
+        public async Task<ApiResponse<Pagination<ParticipantDto>>> GetAll([FromQuery] FilterParticipantDto request, CancellationToken token)
+        {
+            return Ok(await Mediator.Send(
+                new GetParticipantsRequest(request.Name, request.Surname, request.Login, request.IsOnlyActive, request.Offset, request.Limit), token));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("block/{id}")]
+        public async Task<ApiResponse<int>> Block(int id, CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new BlockParticipantRequest(id), token));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("unblock/{id}")]
+        public async Task<ApiResponse<int>> Unblock(int id, CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new UnblockParticipantRequest(id), token));
+        }
+    }
+}

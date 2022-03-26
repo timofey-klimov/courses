@@ -16,9 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using UseCases.User.Commands.CreateUser;
-using UseCases.User.Profiles;
-using UseCases.User.Service;
+using UseCases.Participant.Commands.CreateParticipantCommand;
+using UseCases.Participant.Services;
 using Wep.App.Middlewares;
 
 namespace Wep.App
@@ -51,8 +50,7 @@ namespace Wep.App
             services.AddSingleton(stmpSettings);
             services.AddSingleton(jwtSettings);
             services.AddControllers();
-            services.AddMediatR(typeof(CreateUserRequest).Assembly);
-            services.AddAutoMapper(typeof(ParticipantProfile).Assembly);
+            services.AddMediatR(typeof(CreateParticipantRequest).Assembly);
 
             services.AddSwaggerGen(x =>
             {

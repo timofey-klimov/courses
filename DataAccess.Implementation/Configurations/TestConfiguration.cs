@@ -23,9 +23,6 @@ namespace DataAccess.Implementation.Configurations
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(x => x.CreatedBy)
-                .WithMany(x => x.CreatedTests)
-                .IsRequired();
 
             builder.Metadata
                 .FindNavigation(nameof(Test.Questions))
