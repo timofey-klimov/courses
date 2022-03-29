@@ -7,9 +7,6 @@ namespace UseCases.Test.Dto
     {
         public int Id { get; set; }
         public string Title { get; set; }
-
         public DateTime CreateDate { get; set; }
-
-        public IEnumerable<QuestionDto> Questions { get; set; }
     }
 }
