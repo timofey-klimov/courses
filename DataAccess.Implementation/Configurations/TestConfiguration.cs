@@ -23,7 +23,7 @@ namespace DataAccess.Implementation.Configurations
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
 
-
+            
             builder.Metadata
                 .FindNavigation(nameof(Test.Questions))
                 .SetField("_questions");

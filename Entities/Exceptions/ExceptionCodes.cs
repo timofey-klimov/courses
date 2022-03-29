@@ -9,6 +9,9 @@
         PasswordMatches = 104,
         QuestionAlreadyExist = 105,
         ParticipantAlreadyActive = 106,
-        ParticipantBlocked = 107
+        ParticipantBlocked = 107,
+
+
+        TestAlreadyExists = 301
     }
 }

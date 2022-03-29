@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Entities.Exceptions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Entities.Participants
 {
@@ -18,6 +20,15 @@ namespace Entities.Participants
         private List<Test> _tests;
 
         public IReadOnlyCollection<Test> CreatedTests => _tests;
+
+
+        public void CreateNewTest(Test test)
+        {
+            if (!_tests.Any(x => x.Title == test.Title))
+                throw new TestAlreadyExistException();
+
+            _tests.Add(test);
+        }
 
     }
 }

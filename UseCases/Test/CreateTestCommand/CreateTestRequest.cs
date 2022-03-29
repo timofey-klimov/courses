@@ -4,7 +4,7 @@ using UseCases.Test.Dto;
 
 namespace UseCases.Test.CreateTest
 {
-    public class CreateTestRequest : IRequest
+    public class CreateTestRequest : IRequest<TestDto>
     {
         public string Title { get; }
         public ICollection<QuestionDto> Questions { get; }

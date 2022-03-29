@@ -10,6 +10,6 @@
 
         public string Password { get; set; }
 
-        public string UserRole { get; set; }
+        public string Role { get; set; }
     }
 }

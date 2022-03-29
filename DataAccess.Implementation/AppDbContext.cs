@@ -31,8 +31,6 @@ namespace DataAccess.Implementation
 
         public DbSet<Participant> Participants { get; set; }
 
-        public DbSet<Test> Tests { get; set; }
-
         public DbSet<ParticipantRole> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

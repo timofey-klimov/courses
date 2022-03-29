@@ -12,8 +12,6 @@ namespace DataAccess.Interfaces
     {
         DbSet<Participant> Participants { get; }
 
-        DbSet<Test> Tests { get; }
-
         DbSet<ParticipantRole> Roles { get; }
         DatabaseFacade Database { get; }
 

@@ -41,11 +41,11 @@ namespace UseCases.Participant.Commands.CreateParticipantCommand
                 case "Admin":
                     participant = await _participantFactory.CreateAdmin(request.Login, request.Name, request.Surname, request.Password, hashedPassword);
                     break;
-                case "Manager":
-                    participant = await _participantFactory.CreateManager(request.Login, request.Name, request.Surname, request.Password, hashedPassword);
+                case "Teacher":
+                    participant = await _participantFactory.CreateTeacher(request.Login, request.Name, request.Surname, request.Password, hashedPassword);
                     break;
-                case "User":
-                    participant = await _participantFactory.CreateUser(request.Login, request.Name, request.Surname, request.Password, hashedPassword);
+                case "Student":
+                    participant = await _participantFactory.CreateStudent(request.Login, request.Name, request.Surname, request.Password, hashedPassword);
                     break;
             }
 
@@ -54,6 +54,6 @@ namespace UseCases.Participant.Commands.CreateParticipantCommand
             await _dbContext.SaveChangesAsync();
 
             return new ParticipantDto(participant.Id, participant.Login, participant.Name, participant.Surname, participant.GetState(), participant.Role.Name);
-        }
+         }
     }
 }

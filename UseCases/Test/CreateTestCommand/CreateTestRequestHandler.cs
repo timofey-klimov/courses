@@ -14,7 +14,7 @@ using UseCases.Test.Dto;
 
 namespace UseCases.Test.CreateTest
 {
-    public class CreateTestRequestHandler : IRequestHandler<CreateTestRequest>
+    public class CreateTestRequestHandler : IRequestHandler<CreateTestRequest, TestDto>
     {
 
         private readonly IDbContext _dbContext;
@@ -26,12 +26,9 @@ namespace UseCases.Test.CreateTest
             _currentUserProvider = currentUserProvider;
         }
 
-        public async Task<Unit> Handle(CreateTestRequest request, CancellationToken cancellationToken)
+        public async Task<TestDto> Handle(CreateTestRequest request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-
-            if (!_currentUserProvider.IsManager())
-                throw new AccessDeniedException();
 
             var requestQuetions = request.Questions ?? new List<QuestionDto>();
 
@@ -56,12 +53,15 @@ namespace UseCases.Test.CreateTest
 
             var test = new Entities.Test(request.Title, questions);
 
-            _dbContext.Tests.Add(test);
+            var teacher = await _dbContext.Participants.OfType<Teacher>().FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
+
+            teacher.CreateNewTest(test);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
 
+            return new TestDto();
+           
         }
     }
 }

@@ -11,6 +11,10 @@ namespace DataAccess.Implementation.Configurations.Users
             builder.Metadata
                 .FindNavigation(nameof(Teacher.CreatedTests))
                 .SetField("_tests");
+
+            builder.HasMany(x => x.CreatedTests)
+                .WithOne()
+                .HasForeignKey(x => x.CreatedBy);
         }
     }
 }
