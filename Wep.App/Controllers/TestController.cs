@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Test.CreateTest;
+using UseCases.Test.Dto;
+using UseCases.Test.Queries.GetAllTestQuery;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request.Test;
 using Wep.App.Dto.Responses;
@@ -27,5 +30,12 @@ namespace Wep.App.Controllers
 
             return Ok(result);
         }
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("all")]
+        public async Task<ApiResponse<IEnumerable<TestDto>>> GetAllTests(CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new GetAllTestQueryRequest(), token));
+        }
+
     }
 }
