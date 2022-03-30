@@ -8,6 +8,12 @@ namespace DataAccess.Implementation.Configurations.Users
     {
         public void Configure(EntityTypeBuilder<Student> builder)
         {
+            builder.HasMany(x => x.AssignedTests)
+                .WithOne();
+
+            builder.Metadata
+                .FindNavigation(nameof(Student.AssignedTests))
+                .SetField("_tests");
         }
     }
 }

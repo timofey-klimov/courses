@@ -13,6 +13,7 @@
 
 
         TestAlreadyExists = 301,
-        TestNotFound = 302
+        TestNotFound = 302,
+        TestAlreadyAssigned = 303
     }
 }
