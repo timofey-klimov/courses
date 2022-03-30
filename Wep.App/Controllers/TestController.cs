@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Test.CreateTest;
@@ -17,19 +19,20 @@ namespace Wep.App.Controllers
     [Route("api/test")]
     public class TestController : ApplicationController
     {
-        public TestController(IMediator mediator) 
+        private readonly IMapper _mapper;
+        public TestController(IMediator mediator, IMapper mapper) 
             : base(mediator)
         {
+            _mapper = mapper;
         }
-
 
         [Authorize(Roles = "Teacher")]
         [HttpPost("create")]
-        public async Task<ApiResponse> CreateTest([FromBody] CreateTestDto dto, CancellationToken token)
+        public async Task<ApiResponse<TestDto>> CreateTest([FromBody] CreateTestDto dto, CancellationToken token)
         {
-            var result = await Mediator.Send(new CreateTestRequest(dto.Questions, dto.Title), token);
+            var request = _mapper.Map<CreateTestRequest>(dto);
 
-            return Ok(result);
+            return Ok(await Mediator.Send(request, token));
         }
         
         [Authorize(Roles = "Teacher")]

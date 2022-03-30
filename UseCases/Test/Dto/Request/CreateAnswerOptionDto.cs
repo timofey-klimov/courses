@@ -1,11 +1,9 @@
-﻿namespace UseCases.Test.Dto
+﻿namespace UseCases.Test.Dto.Request
 {
-    public class AsnwerOptionDto
+    public class CreateAnswerOptionDto
     {
-        public long Id { get; set; }
         public string Content { get; set; }
 
         public bool IsCorreсt { get; set; }
-
     }
 }

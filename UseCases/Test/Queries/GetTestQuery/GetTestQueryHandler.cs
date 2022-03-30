@@ -39,7 +39,7 @@ namespace UseCases.Test.Queries.GetTestQuery
                     TeacherId = teacher.Id,
                     Test = teacher.GetTeacherTest(request.Id)
                 })
-               .FirstOrDefaultAsync(x=>x.TeacherId == _currentUserProvider.GetUserId());
+               .FirstOrDefaultAsync(x => x.TeacherId == _currentUserProvider.GetUserId());
 
             if (result == null || result.Test == null)
                 throw new TestNotFoundException();

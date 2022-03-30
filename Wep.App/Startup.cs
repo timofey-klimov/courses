@@ -21,6 +21,7 @@ using UseCases.Participant.Services;
 using UseCases.Test.Services.Abstract;
 using UseCases.Test.Services.Implementation;
 using Wep.App.Middlewares;
+using Wep.App.Profiles;
 
 namespace Wep.App
 {
@@ -54,6 +55,7 @@ namespace Wep.App
             services.AddSingleton(jwtSettings);
             services.AddControllers();
             services.AddMediatR(typeof(CreateParticipantRequest).Assembly);
+            services.AddAutoMapper(typeof(TestProfiles).Assembly);
 
             services.AddSwaggerGen(x =>
             {
