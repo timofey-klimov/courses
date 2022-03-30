@@ -10,16 +10,18 @@ namespace Entities.Participants
             : base(login, name, surname, password, hashedPassword, userRole)
         {
             _tests = new List<Test>();
+            _groups = new List<StudyGroup>();
         }
 
         protected Teacher()
         {
-
         }
 
         private List<Test> _tests;
-
         public IReadOnlyCollection<Test> CreatedTests => _tests;
+
+        private List<StudyGroup> _groups;
+        public IReadOnlyCollection<StudyGroup> StudyGroups => _groups;
 
 
         public void CreateNewTest(Test test)
@@ -33,6 +35,14 @@ namespace Entities.Participants
         public Test GetTeacherTest(int id)
         {
             return _tests.FirstOrDefault(x => x.Id == id);
+        }
+
+        public void AssignGroup(StudyGroup studyGroup)
+        {
+            if (_groups.Contains(studyGroup))
+                throw new GroupAlreadyAssignedException();
+
+            _groups.Add(studyGroup);
         }
     }
 }
