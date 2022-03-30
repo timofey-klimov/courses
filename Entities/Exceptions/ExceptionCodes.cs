@@ -12,6 +12,7 @@
         ParticipantBlocked = 107,
 
 
-        TestAlreadyExists = 301
+        TestAlreadyExists = 301,
+        TestNotFound = 302
     }
 }

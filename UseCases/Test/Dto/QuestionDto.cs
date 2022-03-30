@@ -11,6 +11,6 @@ namespace UseCases.Test.Dto
 
         public QuestionTypeDto Type { get; set; }
 
-        public ICollection<AsnwerOptionDto> AnswerOptions { get; set; }
+        public IEnumerable<AsnwerOptionDto> AnswerOptions { get; set; }
     }
 }

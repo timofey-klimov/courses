@@ -18,6 +18,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UseCases.Participant.Commands.CreateParticipantCommand;
 using UseCases.Participant.Services;
+using UseCases.Test.Services.Abstract;
+using UseCases.Test.Services.Implementation;
 using Wep.App.Middlewares;
 
 namespace Wep.App
@@ -44,6 +46,7 @@ namespace Wep.App
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IParticipantFactory, ParticipantFactory>();
             services.AddScoped<IFilterProvider, FilterProvider>();
+            services.AddScoped<ITestMapService, TestMapService>();
             var jwtSettings = _cfg.GetSection(nameof(JwtSecuritySettings)).Get<JwtSecuritySettings>();
             var stmpSettings = _cfg.GetSection(nameof(SmtpClientSettings)).Get<SmtpClientSettings>();
             services.AddScoped<IMailSender, MailSender.Impl.MailSender>();

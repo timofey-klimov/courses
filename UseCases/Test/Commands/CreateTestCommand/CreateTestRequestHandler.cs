@@ -53,14 +53,17 @@ namespace UseCases.Test.CreateTest
 
             var test = new Entities.Test(request.Title, questions);
 
-            var teacher = await _dbContext.Participants.OfType<Teacher>().FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
+            var teacher = await _dbContext.Participants
+                .OfType<Teacher>()
+                .Include(x=>x.CreatedTests)
+                .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
 
             teacher.CreateNewTest(test);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
 
-            return new TestDto();
+            return new TestDto() { Id = test.Id, Title = test.Title, CreateDate = test.CreateDate};
            
         }
     }

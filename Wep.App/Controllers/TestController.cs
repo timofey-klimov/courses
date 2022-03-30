@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UseCases.Test.CreateTest;
 using UseCases.Test.Dto;
 using UseCases.Test.Queries.GetAllTestQuery;
+using UseCases.Test.Queries.GetTestQuery;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request.Test;
 using Wep.App.Dto.Responses;
@@ -30,6 +31,7 @@ namespace Wep.App.Controllers
 
             return Ok(result);
         }
+        
         [Authorize(Roles = "Teacher")]
         [HttpGet("all")]
         public async Task<ApiResponse<IEnumerable<TestDto>>> GetAllTests(CancellationToken token)
@@ -37,5 +39,11 @@ namespace Wep.App.Controllers
             return Ok(await Mediator.Send(new GetAllTestQueryRequest(), token));
         }
 
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("info/{id}")]
+        public async Task<ApiResponse<TestWithQuestionsDto>> GetTest(int id)
+        {
+            return Ok(await Mediator.Send(new GetTestQueryRequest(id)));
+        }
     }
 }
