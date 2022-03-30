@@ -9,14 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UseCases.Common.Exceptions;
 using UseCases.Test.Dto;
+using UseCases.Test.Dto.Request;
 
 namespace UseCases.Test.CreateTest
 {
     public class CreateTestRequestHandler : IRequestHandler<CreateTestRequest, TestDto>
     {
-
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
 
@@ -30,7 +29,7 @@ namespace UseCases.Test.CreateTest
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var requestQuetions = request.Questions ?? new List<QuestionDto>();
+            var requestQuetions = request.Questions ?? new List<CreateQuestionDto>();
 
             var questions = new List<Question>(requestQuetions.Count);
 
@@ -55,16 +54,14 @@ namespace UseCases.Test.CreateTest
 
             var teacher = await _dbContext.Participants
                 .OfType<Teacher>()
-                .Include(x=>x.CreatedTests)
+                .Include(x => x.CreatedTests)
                 .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
 
             teacher.CreateNewTest(test);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-
             return new TestDto() { Id = test.Id, Title = test.Title, CreateDate = test.CreateDate};
-           
         }
     }
 }
