@@ -54,6 +54,7 @@ namespace Wep.App
             services.AddSingleton(stmpSettings);
             services.AddSingleton(jwtSettings);
             services.AddControllers();
+            services.AddMemoryCache();
             services.AddMediatR(typeof(CreateParticipantRequest).Assembly);
             services.AddAutoMapper(typeof(TestProfiles).Assembly);
 
@@ -122,6 +123,7 @@ namespace Wep.App
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<ParticipantBlockHandler>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
