@@ -43,7 +43,7 @@ namespace Wep.App.Controllers
         [HttpGet("info/{id}")]
         public async Task<ApiResponse<TestWithQuestionsDto>> GetTest(int id)
         {
-            return Ok(await Mediator.Send(new GetTestRequest(id)));
+            return Ok(await Mediator.Send(new GetTestQueryRequest(id)));
         }
     }
 }

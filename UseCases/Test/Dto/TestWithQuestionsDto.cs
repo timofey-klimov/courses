@@ -5,6 +5,6 @@ namespace UseCases.Test.Dto
 {
     public class TestWithQuestionsDto : TestDto
     {
-        public IEnumerable<QuestionDto> Questions;
+        public IEnumerable<QuestionDto> Questions { get; set; }
     }
 }
