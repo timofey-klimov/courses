@@ -24,11 +24,15 @@ namespace Entities.Participants
 
         public void CreateNewTest(Test test)
         {
-            if (!_tests.Any(x => x.Title == test.Title))
+            if (_tests.Any(x => x.Title == test.Title))
                 throw new TestAlreadyExistException();
 
             _tests.Add(test);
         }
 
+        public Test GetTeacherTest(int id)
+        {
+            return _tests.FirstOrDefault(x => x.Id == id);
+        }
     }
 }
