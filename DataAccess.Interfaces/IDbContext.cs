@@ -13,6 +13,8 @@ namespace DataAccess.Interfaces
         DbSet<Participant> Participants { get; }
 
         DbSet<ParticipantRole> Roles { get; }
+
+        DbSet<StudyGroup> StudyGroups { get; }
         DatabaseFacade Database { get; }
 
         Task<int> SaveChangesAsync(CancellationToken token = default);

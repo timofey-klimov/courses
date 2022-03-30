@@ -14,13 +14,16 @@ namespace Entities.Participants
         }
 
         private List<AssignedTest> _tests;
-
         public IReadOnlyCollection<AssignedTest> AssignedTests => _tests;
+
+
+        private List<StudentStudyGroup> _groups;
+        public IReadOnlyCollection<StudentStudyGroup> StudyGroups => _groups;
 
 
         public Student AssignTest(Test test, DateTime deadline)
         {
-            if (_tests.Any(x => x.Test.Equals(test)))
+            if (_tests.Any(x => x.Test == test))
                 throw new TestAlreadyAssignedException();
 
             var assignedTest = new AssignedTest(test, deadline);
@@ -29,5 +32,18 @@ namespace Entities.Participants
 
             return this;
         }
+
+        public Student Enroll(StudyGroup studyGroup)
+        {
+            if (_groups.Any(x => x.Student == this && x.StudyGroup == studyGroup))
+                throw new StudentAlreadyEnrollException();
+
+            _groups.Add(new StudentStudyGroup(this, studyGroup));
+
+            return this;
+        }
+
+        public IReadOnlyCollection<StudyGroup> EnrolledGroups() 
+            => this.StudyGroups?.Where(x => x.Student == this)?.Select(x => x.StudyGroup)?.ToList();
     }
 }

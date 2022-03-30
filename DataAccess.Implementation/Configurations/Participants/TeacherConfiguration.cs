@@ -15,6 +15,14 @@ namespace DataAccess.Implementation.Configurations.Users
             builder.HasMany(x => x.CreatedTests)
                 .WithOne()
                 .HasForeignKey(x => x.CreatedBy);
+
+
+            builder.HasMany(x => x.StudyGroups)
+                .WithOne();
+
+            builder.Metadata
+                .FindNavigation(nameof(Teacher.StudyGroups))
+                .SetField("_groups");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Entities.Participants;
+﻿using Entities;
+using Entities.Participants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,6 +15,11 @@ namespace DataAccess.Implementation.Configurations.Users
             builder.Metadata
                 .FindNavigation(nameof(Student.AssignedTests))
                 .SetField("_tests");
+
+            builder.Metadata
+                .FindNavigation(nameof(Student.StudyGroups))
+                .SetField("_groups");
+
         }
     }
 }

@@ -33,6 +33,8 @@ namespace DataAccess.Implementation
 
         public DbSet<ParticipantRole> Roles { get; set; }
 
+        public DbSet<StudyGroup> StudyGroups { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
