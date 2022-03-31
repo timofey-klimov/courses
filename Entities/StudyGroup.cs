@@ -16,10 +16,9 @@ namespace Entities
         public StudyGroup(string title, IEnumerable<Student> students)
         {
             if (!students?.Any() == true)
-                throw new GroupCannotBeEmptyException();
+                throw new GroupCantBeEmptyException();
 
             Title = title;
-
             _students = students
                 .Select(x => new StudentStudyGroup(x, this))
                 .ToList();

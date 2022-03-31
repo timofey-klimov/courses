@@ -11,9 +11,10 @@
         ParticipantAlreadyActive = 106,
         ParticipantBlocked = 107,
 
-        GroupCannotBeEmpty = 201,
-        GroupAllreadyAssigned = 202,
-        StudentAlreadyEnroll = 203,
+        GroupAllreadyAssigned = 201,
+        StudentAlreadyEnroll = 202,
+        GroupAlreadyExist = 203,
+        GroupCantBeEmpty = 204,
 
         TestAlreadyExists = 301,
         TestNotFound = 302,
