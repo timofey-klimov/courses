@@ -44,7 +44,7 @@ namespace UseCases.StudyGroup.Commands.CreateStudyGroupCommand
             await _dbContext.SaveChangesAsync();
 
             return new CreateStudyGroupDto(
-                new StudyGroupDto(studyGroup.Id, studyGroup.Title), students.Select(x => x.Id));
+                new StudyGroupDto(studyGroup.Id, studyGroup.Title), new Common.Dto.TeacherDto(teacher.Id, teacher.Name, teacher.Surname, teacher.Login));
         }
     }
 }
