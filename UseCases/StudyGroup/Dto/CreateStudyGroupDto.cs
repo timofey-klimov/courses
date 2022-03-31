@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UseCases.Common.Dto;
+﻿using UseCases.Common.Dto;
 
 namespace UseCases.StudyGroup.Dto
 {
