@@ -15,6 +15,7 @@
         StudentAlreadyEnroll = 202,
         GroupAlreadyExist = 203,
         GroupCantBeEmpty = 204,
+        GroupNotFound = 205,
 
         TestAlreadyExists = 301,
         TestNotFound = 302,

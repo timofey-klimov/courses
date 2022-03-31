@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.StudyGroup.Commands.CreateStudyGroupCommand;
+using UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand;
 using UseCases.StudyGroup.Dto;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request.StudyGroups;
@@ -21,9 +22,20 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("create")]
-        public async Task<ApiResponse<CreateStudyGroupDto>> CreateStudyGroup([FromBody] CreateStudyGroupRequestDto dto, CancellationToken cancellationToken)
+        public async Task<ApiResponse<CreateStudyGroupDto>> CreateStudyGroup([FromBody] CreateStudyGroupRequestDto request, 
+            CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new CreateStudyGroupRequest(dto.Title, dto.Students, dto.Teacher), cancellationToken));
+            return Ok(await Mediator.Send(new CreateStudyGroupRequest(request.Title, request.Students, request.Teacher), 
+                cancellationToken));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("enroll")]
+        public async Task<ApiResponse<EnrollStudentsDto>> EnrollStudents([FromBody] EnrollStudentsRequestDto request, 
+            CancellationToken cancellationToken)
+        {
+            return Ok(await Mediator.Send(new EnrollStudentsInGroupRequest(request.Group, request.Students), 
+                cancellationToken));
         }
     }
 }
