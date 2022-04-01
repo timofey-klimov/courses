@@ -38,9 +38,7 @@ namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
                 .Select(x => new
                 {
                     TeacherId = x.Id,
-                    Test = x.CreatedTests
-                        .Where(x => x.Id == request.TestId)
-                        .FirstOrDefault()
+                    Test = x.GetCreatedTest(request.TestId)
                 })
                 .FirstOrDefaultAsync(x => x.TeacherId == _currentUserProvider.GetUserId());
 
