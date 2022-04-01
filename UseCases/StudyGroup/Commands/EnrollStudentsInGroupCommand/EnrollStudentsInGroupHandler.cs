@@ -33,7 +33,7 @@ namespace UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand
 
             var students = _dbContext.Participants
                 .OfType<Entities.Participants.Student>()
-                .Include(x => x.StudyGroups)
+                .Include(x => x.StudentStudyGroups)
                 .Where(x => request.Students.Any(y => y == x.Id))
                 .AsEnumerable();
 

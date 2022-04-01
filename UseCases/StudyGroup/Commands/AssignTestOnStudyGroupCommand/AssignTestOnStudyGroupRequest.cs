@@ -1,12 +1,10 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UseCases.StudyGroup.Dto;
 
 namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
 {
-    public record AssignTestOnStudyGroupRequest(int GroupId, int TestId, DateTime Deadline) : IRequest;
+    public record AssignTestOnStudyGroupRequest(int GroupId, int TestId, DateTime Deadline)
+        : IRequest<AssignedTestDto>;
   
 }
