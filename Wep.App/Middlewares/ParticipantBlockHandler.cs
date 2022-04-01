@@ -38,7 +38,8 @@ namespace Wep.App.Middlewares
                 if (!cache.TryGetValue(userId, out user))
                 {
                     user = await dbContext.Participants.FirstOrDefaultAsync(x => x.Id == userId);
-                    cache.Set(userId, user, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(60)));
+                    if (user.State == ParticipantState.Blocked)
+                        cache.Set(userId, user, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(60)));
                 }
                 
                 if (user.State == ParticipantState.Blocked)

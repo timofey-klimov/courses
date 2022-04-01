@@ -23,15 +23,35 @@ namespace UseCases.StudyGroup.Queries.GetAllStudentGroups
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            var groupsDto = _dbContext.StudyGroups
-                .Include(x => x.Students)
-                .Where(group => group.Students
-                    .Select(student => student.Id)
-                    .Equals(request.StudentId))
-                .ToList()
-                .Select(x => new StudyGroupDto(x.Id, x.Title));
-                       
-            return groupsDto;
+            var teacher = _dbContext.Participants
+                        .OfType<Teacher>()
+                        .Include(x => x.StudyGroups);
+
+            var result = await _dbContext.Participants
+                .OfType<Student>()
+                .Include(x => x.StudentStudyGroups)
+                    .ThenInclude(x => x.Student)
+                .Include(x => x.StudentStudyGroups)
+                    .ThenInclude(x => x.StudyGroup)
+                .Select(x => new
+                {
+                    StudentId = x.Id,
+                    Groups = from t in teacher.FirstOrDefault(x => x.Id == request.TeacherId).StudyGroups
+                             join g in x.EnrolledGroups()
+                             on t.Id equals g.Id into ps
+                             from p in ps.DefaultIfEmpty()
+                             where p == null
+                             select t
+
+                })
+                .FirstOrDefaultAsync(x => x.StudentId == request.StudentId);
+            
+
+            //_dbContext.StudyGroups.Where(x => groupsId.Se)
+
+
+
+            return default;
         }
     }
 }

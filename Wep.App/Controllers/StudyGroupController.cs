@@ -43,9 +43,9 @@ namespace Wep.App.Controllers
         }
 
         [HttpGet("all/student/groups")]
-        public async Task<ApiResponse<IEnumerable<StudyGroupDto>>> GetAllStudentGroups(int studentId,CancellationToken cancellationToken)
+        public async Task<ApiResponse<IEnumerable<StudyGroupDto>>> GetAllStudentGroups(int studentId,int teacherId,CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetAllStudentGroupsRequest(studentId), cancellationToken));
+            return Ok(await Mediator.Send(new GetAllStudentGroupsRequest(studentId, teacherId), cancellationToken));
         }
 
         [Authorize(Roles = "Teacher")]
