@@ -45,7 +45,7 @@ namespace Wep.App.Controllers
         public async Task<ApiResponse<AssignedTestDto>> AssignTestOnStudyGroup([FromBody] AssignTestOnStudyGroupDto request, 
             CancellationToken token)
         {
-           return Ok(await Mediator.Send(new AssignTestOnStudyGroupRequest(request.GroupId, request.TestId, request.Deadline)));
+           return Ok(await Mediator.Send(new AssignTestOnStudyGroupRequest(request.GroupId, request.TestId, request.Deadline), token));
         }
     }
 }
