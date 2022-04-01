@@ -23,12 +23,14 @@ namespace UseCases.Test.Queries.GetTestQuery
         private readonly ITestMapService _mapper;
         public GetTestQueryHandler(IDbContext dbContext, ICurrentUserProvider currentUserProvider, ITestMapService mapper)
         {
-            _currentUserProvider = currentUserProvider;
-            _dbContext = dbContext;
-            _mapper = mapper;
+            _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         public async Task<TestWithQuestionsDto> Handle(GetTestQueryRequest request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             var result = await _dbContext.Participants
                 .OfType<Teacher>()
                 .Include(x => x.CreatedTests)

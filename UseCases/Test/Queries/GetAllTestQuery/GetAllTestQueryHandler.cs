@@ -19,11 +19,13 @@ namespace UseCases.Test.Queries.GetAllTestQuery
         private readonly ICurrentUserProvider _currentUserProvider;
         public GetAllTestQueryHandler(IDbContext dbContext, ICurrentUserProvider currentUserProvider)
         {
-            _currentUserProvider = currentUserProvider;
-            _dbContext = dbContext;
+            _currentUserProvider = currentUserProvider  ?? throw new ArgumentNullException(nameof(currentUserProvider));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
         public async Task<IEnumerable<TestDto>> Handle(GetAllTestQueryRequest request, CancellationToken cancellationToken)
         {
+            _ = request ?? throw new ArgumentNullException(nameof(request));
+
             var teacher = await _dbContext.Participants
                 .OfType<Teacher>()
                 .Include(x=>x.CreatedTests)
