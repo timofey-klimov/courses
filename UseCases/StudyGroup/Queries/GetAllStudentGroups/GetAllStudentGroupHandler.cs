@@ -1,4 +1,5 @@
 ﻿using DataAccess.Interfaces;
+using Entities.Exceptions;
 using Entities.Participants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +24,13 @@ namespace UseCases.StudyGroup.Queries.GetAllStudentGroups
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            var teacher = _dbContext.Participants
+            var teacher = (await _dbContext.Participants
                         .OfType<Teacher>()
-                        .Include(x => x.StudyGroups);
+                        .Include(x => x.StudyGroups)
+                        .FirstOrDefaultAsync(x => x.Id == request.TeacherId));
+
+            if (teacher == null || teacher.StudyGroups == null)
+                throw new GroupNotFoundException();
 
             var result = await _dbContext.Participants
                 .OfType<Student>()
@@ -36,22 +41,13 @@ namespace UseCases.StudyGroup.Queries.GetAllStudentGroups
                 .Select(x => new
                 {
                     StudentId = x.Id,
-                    Groups = from t in teacher.FirstOrDefault(x => x.Id == request.TeacherId).StudyGroups
-                             join g in x.EnrolledGroups()
-                             on t.Id equals g.Id into ps
-                             from p in ps.DefaultIfEmpty()
-                             where p == null
-                             select t
-
+                    Groups = x.EnrolledGroups()
                 })
                 .FirstOrDefaultAsync(x => x.StudentId == request.StudentId);
-            
-
-            //_dbContext.StudyGroups.Where(x => groupsId.Se)
 
 
-
-            return default;
+            return teacher.StudyGroups.Except(result.Groups)
+                    .Select(x => new StudyGroupDto(x.Id, x.Title));
         }
     }
 }
