@@ -1,24 +1,25 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace DataAccess.Implementation.Configurations
 {
-    public class StudentStudyGroupConfiguration : IEntityTypeConfiguration<StudentStudyGroup>
+    public class StudentAssignTestConfiguration : IEntityTypeConfiguration<StudentAssignTest>
     {
-        public void Configure(EntityTypeBuilder<StudentStudyGroup> builder)
+        public void Configure(EntityTypeBuilder<StudentAssignTest> builder)
         {
-            builder.HasKey(x => new { x.StudentId, x.StudyGroupId });
+            builder.HasKey(x => new { x.AssignTestId, x.StudentId });
 
             builder.Ignore(x => x.Id);
 
-            builder.HasOne(x => x.Student)
-                .WithMany(x => x.StudentStudyGroups)
-                .HasForeignKey(x => x.StudentId);
+            builder.HasOne(x => x.AssignedTest)
+                .WithMany(x => x.StudentAssignTests)
+                .HasForeignKey(x => x.AssignTestId);
 
-            builder.HasOne(x => x.StudyGroup)
-                .WithMany(x => x.Students)
-                .HasForeignKey(x => x.StudyGroupId);
+            builder.HasOne(x => x.Student)
+                .WithMany(x => x.StudentAssignedTests)
+                .HasForeignKey(x => x.StudentId);
 
             builder.Property(x => x.CreateDate)
                 .HasColumnType("datetime2(0)")
@@ -27,7 +28,7 @@ namespace DataAccess.Implementation.Configurations
             builder.Property(x => x.UpdateDate)
                 .HasColumnType("datetime2(0)");
 
-            builder.ToTable("StudentStudyGroups");
+            builder.ToTable("StudentAssignTests");
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Entities.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,22 +12,20 @@ namespace Entities.Participants
         {
         }
 
-        private List<AssignedTest> _tests;
-        public IReadOnlyCollection<AssignedTest> AssignedTests => _tests;
+        private List<StudentAssignTest> _tests;
+        public IReadOnlyCollection<StudentAssignTest> StudentAssignedTests => _tests;
 
 
         private List<StudentStudyGroup> _groups;
-        public IReadOnlyCollection<StudentStudyGroup> StudyGroups => _groups;
+        public IReadOnlyCollection<StudentStudyGroup> StudentStudyGroups => _groups;
 
 
-        public Student AssignTest(Test test, DateTime deadline)
+        public Student AssignTest(AssignedTest assignedTest)
         {
-            if (_tests.Any(x => x.Test == test))
+            if (_tests.Any(x => x.AssignedTest.Test == assignedTest.Test))
                 throw new TestAlreadyAssignedException();
 
-            var assignedTest = new AssignedTest(test, deadline);
-
-            _tests.Add(assignedTest);
+            _tests.Add(new StudentAssignTest(this, assignedTest));
 
             return this;
         }
@@ -44,6 +41,9 @@ namespace Entities.Participants
         }
 
         public IReadOnlyCollection<StudyGroup> EnrolledGroups() 
-            => this.StudyGroups?.Where(x => x.Student == this)?.Select(x => x.StudyGroup)?.ToList();
+            => this.StudentStudyGroups?.Where(x => x.Student == this)?.Select(x => x.StudyGroup)?.ToList();
+
+        public IReadOnlyCollection<AssignedTest> AssignedTests()
+            => this.StudentAssignedTests.Where(x => x.Student == this)?.Select(x => x.AssignedTest)?.ToList();
     }
 }
