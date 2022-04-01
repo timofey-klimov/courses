@@ -32,7 +32,7 @@ namespace Entities.Participants
             _tests.Add(test);
         }
 
-        public Test GetTeacherTest(int id)
+        public Test GetCreatedTest(int id)
         {
             return _tests.FirstOrDefault(x => x.Id == id);
         }

@@ -17,14 +17,12 @@ namespace DataAccess.Implementation.Configurations
             builder.Property(x => x.Deadline)
                 .HasColumnType("datetime2(0)");
 
-            builder.Property(x => x.UpdateDate)
-                .HasColumnType("datetime2(0)");
-
-            builder.Property(x => x.CompletedDate)
-                .HasColumnType("datetime2(0)");
-
             builder.HasOne(x => x.Test)
                 .WithMany();
+
+            builder.Metadata
+                .FindNavigation(nameof(AssignedTest.StudentAssignTests))
+                .SetField("_studentAssignTest");
 
             builder.ToTable("AssignedTests");
         }

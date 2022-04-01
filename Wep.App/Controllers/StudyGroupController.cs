@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand;
 using UseCases.StudyGroup.Commands.CreateStudyGroupCommand;
 using UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand;
 using UseCases.StudyGroup.Dto;
 using UseCases.StudyGroup.Queries.GetAllStudentGroups;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request.StudyGroups;
+using Wep.App.Dto.Request.Test;
 using Wep.App.Dto.Responses;
 
 namespace Wep.App.Controllers
@@ -44,6 +46,14 @@ namespace Wep.App.Controllers
         public async Task<ApiResponse<IEnumerable<StudyGroupDto>>> GetAllStudentGroups(int studentId,CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetAllStudentGroupsRequest(studentId), cancellationToken));
+        }
+
+        [Authorize(Roles = "Teacher")]
+        [HttpPost("assignTest")]
+        public async Task<ApiResponse<AssignedTestDto>> AssignTestOnStudyGroup([FromBody] AssignTestOnStudyGroupDto request, 
+            CancellationToken token)
+        {
+           return Ok(await Mediator.Send(new AssignTestOnStudyGroupRequest(request.GroupId, request.TestId, request.Deadline), token));
         }
     }
 }

@@ -25,5 +25,9 @@ namespace Entities
         }
 
         private StudyGroup() { }
+
+
+        public IReadOnlyCollection<Student> GetEnrolledStudents() =>
+            _students?.Where(x => x.StudyGroup == this)?.Select(x => x.Student)?.ToList();
     }
 }
