@@ -1,12 +1,10 @@
 ﻿using DataAccess.Interfaces;
-using Entities.Exceptions;
 using Entities.Participants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Participant;
