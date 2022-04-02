@@ -42,7 +42,6 @@ namespace Wep.App.Controllers
                 cancellationToken));
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("all/student/groups")]
         public async Task<ApiResponse<IEnumerable<StudyGroupDto>>> GetAllStudentGroups(int studentId,int teacherId,CancellationToken cancellationToken)
         {

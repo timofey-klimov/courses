@@ -41,9 +41,9 @@ namespace Entities.Participants
         }
 
         public IReadOnlyCollection<StudyGroup> EnrolledGroups() 
-            => this.StudentStudyGroups?.Where(x => x.Student == this)?.Select(x => x.StudyGroup)?.ToList();
+            => this.StudentStudyGroups?.Select(x => x.StudyGroup)?.ToList();
 
         public IReadOnlyCollection<AssignedTest> AssignedTests()
-            => this.StudentAssignedTests.Where(x => x.Student == this)?.Select(x => x.AssignedTest)?.ToList();
+            => this.StudentAssignedTests.Select(x => x.AssignedTest)?.ToList();
     }
 }
