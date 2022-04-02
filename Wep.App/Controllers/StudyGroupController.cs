@@ -42,7 +42,7 @@ namespace Wep.App.Controllers
                 cancellationToken));
         }
 
-        [HttpGet("all/student/groups")]
+        [HttpGet("all")]
         public async Task<ApiResponse<IEnumerable<StudyGroupDto>>> GetAllStudentGroups(int studentId,int teacherId,CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetAllStudentGroupsRequest(studentId, teacherId), cancellationToken));

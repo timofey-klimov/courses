@@ -28,6 +28,6 @@ namespace Entities
 
 
         public IReadOnlyCollection<Student> GetEnrolledStudents() =>
-            _students?.Where(x => x.StudyGroup == this)?.Select(x => x.Student)?.ToList();
+            _students?.Select(x => x.Student)?.ToList();
     }
 }
