@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.Participant;
 using UseCases.StudyGroup.Dto;
 
 namespace UseCases.StudyGroup.Queries.GetAllStudentGroups
@@ -24,30 +25,23 @@ namespace UseCases.StudyGroup.Queries.GetAllStudentGroups
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            var teacher = (await _dbContext.Participants
-                        .OfType<Teacher>()
-                        .Include(x => x.StudyGroups)
-                        .FirstOrDefaultAsync(x => x.Id == request.TeacherId));
-
-            if (teacher == null || teacher.StudyGroups == null)
-                throw new GroupNotFoundException();
-
             var result = await _dbContext.Participants
-                .OfType<Student>()
-                .Include(x => x.StudentStudyGroups)
-                    .ThenInclude(x => x.Student)
-                .Include(x => x.StudentStudyGroups)
-                    .ThenInclude(x => x.StudyGroup)
+                .OfType<Teacher>()
+                .Include(x => x.StudyGroups)
+                    .ThenInclude(x => x.Students)
                 .Select(x => new
                 {
-                    StudentId = x.Id,
-                    Groups = x.EnrolledGroups()
+                    Id = x.Id,
+                    Groups = x.StudyGroups
+                        .Where(x => !x.Students.Any(x => x.StudentId == request.StudentId))
                 })
-                .FirstOrDefaultAsync(x => x.StudentId == request.StudentId);
+                .FirstOrDefaultAsync(x => x.Id == request.TeacherId);
 
+            if (result == null)
+                throw new ParticipantNotFoundException();
 
-            return teacher.StudyGroups.Except(result.Groups)
-                    .Select(x => new StudyGroupDto(x.Id, x.Title));
+            return result.Groups
+                .Select(x => new StudyGroupDto(x.Id, x.Title));
         }
     }
 }
