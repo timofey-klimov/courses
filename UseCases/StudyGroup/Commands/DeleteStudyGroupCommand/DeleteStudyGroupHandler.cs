@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UseCases.StudyGroup.Commands.DeleteStudyGroup
+namespace UseCases.StudyGroup.Commands.DeleteStudyGroupCommand
 {
     public class DeleteStudyGroupHandler : IRequestHandler<DeleteStudyGroupRequest, int>
     {

@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand;
 using UseCases.StudyGroup.Commands.CreateStudyGroupCommand;
-using UseCases.StudyGroup.Commands.DeleteStudyGroup;
+using UseCases.StudyGroup.Commands.DeleteStudyGroupCommand;
 using UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand;
 using UseCases.StudyGroup.Dto;
 using UseCases.StudyGroup.Queries.GetAllStudentGroups;
@@ -58,7 +58,7 @@ namespace Wep.App.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("delete/group")]
+        [HttpPost("delete/{groupId}")]
         public async Task<ApiResponse<int>> DeleteStudyGroup(int groupId,
             CancellationToken cancellationToken)
         {
