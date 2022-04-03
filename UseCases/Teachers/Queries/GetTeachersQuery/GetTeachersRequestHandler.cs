@@ -1,5 +1,6 @@
 ﻿using DataAccess.Interfaces;
 using DataAccess.Interfaces.Specifications.Teacher.Contains;
+using Entities.Participants.States;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,8 @@ namespace UseCases.Teachers.Queries.GetTeachersQuery
             var spec = new TeacherFilterSpecification(request.Name, request.Surname);
 
             var query = _dbContext.Participants
-                .OfType<Entities.Participants.Teacher>();
+                .OfType<Entities.Participants.Teacher>()
+                .Where(x => x.State != ParticipantState.Blocked);
 
             var teachers = _filterProvider.GetQuery(query, spec)
                 .AsEnumerable();

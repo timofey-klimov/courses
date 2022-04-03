@@ -27,8 +27,8 @@ namespace DataAccess.Interfaces.Specifications.Teacher.Contains
                     : compositeSpec.Or(new TeacherNameContainsSpecification(_name));
 
             if (_surname != null)
-                compositeSpec = compositeSpec == null ? new TeacherSurnameContainsSpecification(_name)
-                    : compositeSpec.Or(new TeacherSurnameContainsSpecification(_name));
+                compositeSpec = compositeSpec == null ? new TeacherSurnameContainsSpecification(_surname)
+                    : compositeSpec.Or(new TeacherSurnameContainsSpecification(_surname));
 
             return compositeSpec?.CreateCriteria();
 
