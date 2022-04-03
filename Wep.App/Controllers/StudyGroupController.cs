@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.Dto;
 using UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand;
 using UseCases.StudyGroup.Commands.CreateStudyGroupCommand;
 using UseCases.StudyGroup.Commands.DeleteStudyGroupCommand;
@@ -54,9 +55,9 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("all")]
-        public async Task<ApiResponse<IEnumerable<GetAllStudyGroupsDto>>> GetAllGroups(CancellationToken cancellationToken)
+        public async Task<ApiResponse<Pagination<GetAllStudyGroupsDto>>> GetAllGroups([FromQuery] FilterStudyGroupsRequest request, CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetAllGroupsRequest(), cancellationToken));
+            return Ok(await Mediator.Send(new GetAllGroupsRequest(request.Offset, request.Limit), cancellationToken));
         }
 
         [Authorize(Roles = "Teacher")]

@@ -13,7 +13,7 @@ using UseCases.StudyGroup.Dto;
 
 namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
 {
-    public class GetAllGroupsRequestHandler : IRequestHandler<GetAllGroupsRequest, IEnumerable<GetAllStudyGroupsDto>>
+    public class GetAllGroupsRequestHandler : IRequestHandler<GetAllGroupsRequest, Pagination<GetAllStudyGroupsDto>>
     {
         private readonly IDbContext _dbContext;
 
@@ -22,7 +22,7 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<IEnumerable<GetAllStudyGroupsDto>> Handle(GetAllGroupsRequest request, CancellationToken cancellationToken)
+        public async Task<Pagination<GetAllStudyGroupsDto>> Handle(GetAllGroupsRequest request, CancellationToken cancellationToken)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
@@ -34,9 +34,13 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
                     Teacher = x,
                     Groups = x.StudyGroups
                 })
+                .Skip(request.Offset)
+                .Take(request.Limit)
                 .AsEnumerable();
 
-            var list = new List<GetAllStudyGroupsDto>(result.SelectMany(x => x.Groups).Count());
+            var count = result.SelectMany(x => x.Groups).Count();
+
+            var list = new List<GetAllStudyGroupsDto>(count);
                 
             foreach (var item in result)
             {
@@ -49,8 +53,7 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
                 }
             }
 
-            return list;
-
+            return new Pagination<GetAllStudyGroupsDto>(list, count);
         }
     }
 }
