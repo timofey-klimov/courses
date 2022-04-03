@@ -23,10 +23,10 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("all")]
-        public async Task<ApiResponse<IEnumerable<TeacherDto>>> GetTeachers([FromQuery] GetTeachersDto dto, 
+        public async Task<ApiResponse<Pagination<TeacherDto>>> GetTeachers([FromQuery] GetTeachersDto dto, 
             CancellationToken token)
         { 
-            return Ok(await Mediator.Send(new GetTeachersRequest(dto.Name, dto.Surname), token));
+            return Ok(await Mediator.Send(new GetTeachersRequest(dto.Name, dto.Surname, dto.Offset, dto.Limit), token));
         }
     }
 }

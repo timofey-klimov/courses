@@ -11,5 +11,9 @@ namespace Wep.App.Dto.Request.StudyGroups
         public string Name { get; set; }
 
         public string Surname { get; set; }
+
+        public int Limit { get; set; } = 5;
+
+        public int Offset { get; set; } = 0;
     }
 }

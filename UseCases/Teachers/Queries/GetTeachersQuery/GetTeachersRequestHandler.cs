@@ -11,7 +11,7 @@ using UseCases.Common.Dto;
 
 namespace UseCases.Teachers.Queries.GetTeachersQuery
 {
-    public class GetTeachersRequestHandler : IRequestHandler<GetTeachersRequest, IEnumerable<TeacherDto>>
+    public class GetTeachersRequestHandler : IRequestHandler<GetTeachersRequest, Pagination<TeacherDto>>
     {
         private readonly IDbContext _dbContext;
         private readonly IFilterProvider _filterProvider;
@@ -21,7 +21,7 @@ namespace UseCases.Teachers.Queries.GetTeachersQuery
             _filterProvider = filterProvider ?? throw new ArgumentNullException(nameof(filterProvider));
         }
 
-        public async Task<IEnumerable<TeacherDto>> Handle(GetTeachersRequest request, CancellationToken cancellationToken)
+        public async Task<Pagination<TeacherDto>> Handle(GetTeachersRequest request, CancellationToken cancellationToken)
         {
             var spec = new TeacherFilterSpecification(request.Name, request.Surname);
 
@@ -29,10 +29,15 @@ namespace UseCases.Teachers.Queries.GetTeachersQuery
                 .OfType<Entities.Participants.Teacher>()
                 .Where(x => x.State != ParticipantState.Blocked);
 
+            var count = await _filterProvider.GetCountQuery(query, spec);
+
             var teachers = _filterProvider.GetQuery(query, spec)
+                .Skip(request.Offset)
+                .Take(request.Limit)
                 .AsEnumerable();
 
-            return teachers.Select(x => new TeacherDto(x.Id, x.Name, x.Surname, x.Login));
+            return new Pagination<TeacherDto>(teachers.Select(
+                x => new TeacherDto(x.Id, x.Name, x.Surname, x.Login)), count);
         }
     }
 }
