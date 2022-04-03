@@ -27,7 +27,7 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
             var result = _dbContext.Participants
-                .OfType<Teacher>()
+                .OfType<Entities.Participants.Teacher>()
                 .Include(x => x.StudyGroups)
                 .Select(x => new
                 {
