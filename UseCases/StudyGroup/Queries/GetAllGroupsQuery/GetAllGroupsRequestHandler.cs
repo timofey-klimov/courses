@@ -26,18 +26,22 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
-            var result = _dbContext.Participants
-                .OfType<Entities.Participants.Teacher>()
-                .Include(x => x.StudyGroups)
+            var query = _dbContext.Participants
+                .OfType<Teacher>()
+                .Include(x => x.StudyGroups);
+                
+            var totalCount = await query.SelectMany(x => x.StudyGroups).CountAsync();
+
+            var result = query
                 .Select(x => new
                 {
                     Teacher = x,
                     Groups = x.StudyGroups
+                        .Skip(request.Offset)
+                        .Take(request.Limit)
                 })
-                .Skip(request.Offset)
-                .Take(request.Limit)
                 .AsEnumerable();
-
+                
             var count = result.SelectMany(x => x.Groups).Count();
 
             var list = new List<GetAllStudyGroupsDto>(count);
@@ -53,7 +57,7 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
                 }
             }
 
-            return new Pagination<GetAllStudyGroupsDto>(list, count);
+            return new Pagination<GetAllStudyGroupsDto>(list, totalCount);
         }
     }
 }

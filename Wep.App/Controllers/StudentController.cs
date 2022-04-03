@@ -11,6 +11,7 @@ using Wep.App.Dto.Responses;
 
 namespace Wep.App.Controllers
 {
+    [Route("api/students")]
     public class StudentController : ApplicationController
     {
         public StudentController(IMediator mediator)
