@@ -9,6 +9,7 @@ using UseCases.StudyGroup.Commands.CreateStudyGroupCommand;
 using UseCases.StudyGroup.Commands.DeleteStudyGroupCommand;
 using UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand;
 using UseCases.StudyGroup.Dto;
+using UseCases.StudyGroup.Queries.GetAllGroupsQuery;
 using UseCases.StudyGroup.Queries.GetAllStudentGroups;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request.StudyGroups;
@@ -43,11 +44,19 @@ namespace Wep.App.Controllers
                 cancellationToken));
         }
 
-        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("vacant")]
         public async Task<ApiResponse<IEnumerable<StudyGroupDto>>> GetAllStudentGroups(int studentId, int teacherId,
             CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetAllStudentGroupsRequest(studentId, teacherId), cancellationToken));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("all")]
+        public async Task<ApiResponse<IEnumerable<GetAllStudyGroupsDto>>> GetAllGroups(CancellationToken cancellationToken)
+        {
+            return Ok(await Mediator.Send(new GetAllGroupsRequest(), cancellationToken));
         }
 
         [Authorize(Roles = "Teacher")]
@@ -59,7 +68,7 @@ namespace Wep.App.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPost("delete/{groupId}")]
+        [HttpDelete("delete/{groupId}")]
         public async Task<ApiResponse<int>> DeleteStudyGroup(int groupId,
             CancellationToken cancellationToken)
         {
