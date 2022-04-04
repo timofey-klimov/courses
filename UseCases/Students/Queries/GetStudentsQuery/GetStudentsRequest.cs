@@ -4,6 +4,6 @@ using UseCases.Common.Dto;
 
 namespace UseCases.Students.Queries.GetStudentsQuery
 {
-    public record GetStudentsRequest() : IRequest<IEnumerable<StudentDto>>;
+    public record GetStudentsRequest(int Offset, int Limit) : IRequest<Pagination<StudentDto>>;
    
 }

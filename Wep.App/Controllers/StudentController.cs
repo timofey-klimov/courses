@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
@@ -21,9 +20,10 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("all")]
-        public async Task<ApiResponse<IEnumerable<StudentDto>>> GetStudents(CancellationToken cancellationToken)
+        public async Task<ApiResponse<Pagination<StudentDto>>> GetStudents([FromQuery] GetStudentsRequest request, 
+            CancellationToken cancellationToken)
         {
-            return Ok(await Mediator.Send(new GetStudentsRequest(), cancellationToken));
+            return Ok(await Mediator.Send(new GetStudentsRequest(request.Offset, request.Limit), cancellationToken));
         }
     }
 }

@@ -5,13 +5,14 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.Dto;
 using UseCases.Common.Participant;
 using UseCases.StudyGroup.Dto;
 using UseCases.StudyGroup.Exceptions;
 
 namespace UseCases.StudyGroup.Commands.CreateStudyGroupCommand
 {
-    public class CreateStudyGroupHandler : IRequestHandler<CreateStudyGroupRequest, CreateStudyGroupDto>
+    public class CreateStudyGroupHandler : IRequestHandler<CreateStudyGroupRequest, StudyGroupDto>
     {
         private readonly IDbContext _dbContext;
         public CreateStudyGroupHandler(IDbContext dbContext)
@@ -19,7 +20,7 @@ namespace UseCases.StudyGroup.Commands.CreateStudyGroupCommand
             _dbContext =  dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public async Task<CreateStudyGroupDto> Handle(CreateStudyGroupRequest request, CancellationToken cancellationToken)
+        public async Task<StudyGroupDto> Handle(CreateStudyGroupRequest request, CancellationToken cancellationToken)
         {
             if (await _dbContext.StudyGroups.AnyAsync(x => x.Title == request.Title))
                 throw new GroupAlreadyExistException();
@@ -43,8 +44,8 @@ namespace UseCases.StudyGroup.Commands.CreateStudyGroupCommand
 
             await _dbContext.SaveChangesAsync();
 
-            return new CreateStudyGroupDto(
-                new StudyGroupDto(studyGroup.Id, studyGroup.Title), new Common.Dto.TeacherDto(teacher.Id, teacher.Name, teacher.Surname, teacher.Login));
+            return new StudyGroupDto(
+                studyGroup.Id, studyGroup.Title, new TeacherDto(teacher.Id, teacher.Name, teacher.Surname, teacher.Login), studyGroup.CreateDate);
         }
     }
 }

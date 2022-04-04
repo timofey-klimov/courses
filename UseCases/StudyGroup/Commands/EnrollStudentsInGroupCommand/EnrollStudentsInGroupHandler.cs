@@ -51,7 +51,7 @@ namespace UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand
 
             await _dbContext.SaveChangesAsync();
 
-            return new EnrollStudentsDto(new StudyGroupDto(group.Id, group.Title),
+            return new EnrollStudentsDto(new SimpleStudyGroupDto(group.Id, group.Title),
                 students.Select(x => new Common.Dto.StudentDto(x.Id, x.Name, x.Surname, x.Login)));
         }
     }

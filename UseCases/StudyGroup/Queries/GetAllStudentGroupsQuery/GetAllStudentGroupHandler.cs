@@ -30,6 +30,7 @@ namespace UseCases.StudyGroup.Queries.GetAllStudentGroups
                 .Select(x => new
                 {
                     Id = x.Id,
+                    Teacher = x,
                     Groups = x.StudyGroups
                         .Where(x => !x.Students.Any(x => x.StudentId == request.StudentId))
                 })
@@ -39,7 +40,8 @@ namespace UseCases.StudyGroup.Queries.GetAllStudentGroups
                 throw new ParticipantNotFoundException();
 
             return result.Groups
-                .Select(x => new StudyGroupDto(x.Id, x.Title));
+                .Select(x => new StudyGroupDto(x.Id, x.Title, 
+                new Common.Dto.TeacherDto(result.Teacher.Id, result.Teacher.Name, result.Teacher.Surname, result.Teacher.Login), x.CreateDate));
         }
     }
 }

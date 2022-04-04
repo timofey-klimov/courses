@@ -29,7 +29,7 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("create")]
-        public async Task<ApiResponse<CreateStudyGroupDto>> CreateStudyGroup([FromBody] CreateStudyGroupRequestDto request, 
+        public async Task<ApiResponse<StudyGroupDto>> CreateStudyGroup([FromBody] CreateStudyGroupRequestDto request, 
             CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new CreateStudyGroupRequest(request.Title, request.Students, request.Teacher), 
@@ -55,7 +55,7 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("all")]
-        public async Task<ApiResponse<Pagination<GetAllStudyGroupsDto>>> GetAllGroups([FromQuery] FilterStudyGroupsRequest request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<Pagination<StudyGroupDto>>> GetAllGroups([FromQuery] FilterStudyGroupsRequest request, CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new GetAllGroupsRequest(request.Offset, request.Limit), cancellationToken));
         }
