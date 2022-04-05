@@ -9,6 +9,7 @@ using UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand;
 using UseCases.StudyGroup.Commands.CreateStudyGroupCommand;
 using UseCases.StudyGroup.Commands.DeleteStudyGroupCommand;
 using UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand;
+using UseCases.StudyGroup.Commands.RemovStudentsCommand;
 using UseCases.StudyGroup.Dto;
 using UseCases.StudyGroup.Queries.GetAllGroupsQuery;
 using UseCases.StudyGroup.Queries.GetAllStudentGroups;
@@ -74,6 +75,14 @@ namespace Wep.App.Controllers
             CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new DeleteStudyGroupRequest(groupId), cancellationToken));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("removeStudents")]
+        public async Task<ApiResponse<RemoveStudentsFromStudyGroupDto>> RemoveStudentsFromStudyGroup([FromBody] RemoveStudentsFromStudyGroupDto dto, 
+            CancellationToken cancellationToken)
+        {
+            return Ok(await Mediator.Send(new RemoveStudentsRequest(dto.studyGroupId, dto.studentsId), cancellationToken));
         }
     }
 }
