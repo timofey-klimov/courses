@@ -29,5 +29,8 @@ namespace Entities
 
         public IReadOnlyCollection<Student> GetEnrolledStudents() =>
             _students?.Select(x => x.Student)?.ToList();
+
+        public void RemoveStudents(ICollection<Student> students) =>
+            _students.RemoveAll(x => students.Contains(x.Student));
     }
 }
