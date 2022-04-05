@@ -12,6 +12,7 @@ using UseCases.StudyGroup.Commands.EnrollStudentsInGroupCommand;
 using UseCases.StudyGroup.Dto;
 using UseCases.StudyGroup.Queries.GetAllGroupsQuery;
 using UseCases.StudyGroup.Queries.GetAllStudentGroups;
+using UseCases.StudyGroup.Queries.GetStudyGroupInfoQuery;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request.StudyGroups;
 using Wep.App.Dto.Request.Test;
@@ -74,6 +75,14 @@ namespace Wep.App.Controllers
             CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new DeleteStudyGroupRequest(groupId), cancellationToken));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("info/{teacherId}/{groupId}")]
+        public async Task<ApiResponse<StudyGroupInfoDto>> GetStudyGroupInfo(int teacherId, int groupId, 
+            CancellationToken cancellationToken)
+        {
+            return Ok(await Mediator.Send(new GetStudyGroupInfoRequest(groupId, teacherId), cancellationToken));
         }
     }
 }
