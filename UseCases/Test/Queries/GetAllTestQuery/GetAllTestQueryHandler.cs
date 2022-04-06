@@ -25,8 +25,19 @@ namespace UseCases.Test.Queries.GetAllTestQuery
             var teacher = await _dbContext.Participants
                 .OfType<Teacher>()
                 .Include(x=>x.CreatedTests)
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Tests = x.CreatedTests.Select(x => new
+                    {
+                        x.Id,
+                        x.Title,
+                        x.CreateDate
+                    })
+                   
+                })
                 .FirstOrDefaultAsync(x=>x.Id == request.TeacherId);
-            return teacher.CreatedTests.Select(test => new TestDto {Id = test.Id, Title = test.Title, CreateDate = test.CreateDate});
+            return teacher.Tests.Select(test => new TestDto {Id = test.Id, Title = test.Title, CreateDate = test.CreateDate});
         }
     }
 }

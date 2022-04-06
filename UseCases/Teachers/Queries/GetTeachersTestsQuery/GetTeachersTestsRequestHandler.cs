@@ -36,7 +36,13 @@ namespace UseCases.Teachers.Queries.GetTeachersTestsQuery
                     Count = x.CreatedTests.Count(),
                     Tests = x.CreatedTests
                         .Skip(request.Offset)
-                        .Take(request.Limit),
+                        .Take(request.Limit)
+                        .Select(x => new
+                        {
+                            x.Id,
+                            x.Title,
+                            x.CreateDate
+                        }),
                     x.Id
                 })
                 .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
