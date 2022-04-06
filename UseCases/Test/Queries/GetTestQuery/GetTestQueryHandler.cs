@@ -5,9 +5,7 @@ using Entities.Participants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Test.Dto;
@@ -19,11 +17,9 @@ namespace UseCases.Test.Queries.GetTestQuery
     public class GetTestQueryHandler : IRequestHandler<GetTestQueryRequest, TestWithQuestionsDto>
     {
         private readonly IDbContext _dbContext;
-        private readonly ICurrentUserProvider _currentUserProvider;
         private readonly ITestMapService _mapper;
-        public GetTestQueryHandler(IDbContext dbContext, ICurrentUserProvider currentUserProvider, ITestMapService mapper)
+        public GetTestQueryHandler(IDbContext dbContext, ITestMapService mapper)
         {
-            _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -39,9 +35,9 @@ namespace UseCases.Test.Queries.GetTestQuery
                 .Select(teacher => new
                 {
                     TeacherId = teacher.Id,
-                    Test = teacher.GetCreatedTest(request.Id)
+                    Test = teacher.GetCreatedTest(request.TestId)
                 })
-               .FirstOrDefaultAsync(x => x.TeacherId == _currentUserProvider.GetUserId());
+               .FirstOrDefaultAsync(x => x.TeacherId == request.TeacherId);
 
             if (result == null || result.Test == null)
                 throw new TestNotFoundException();

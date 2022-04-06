@@ -16,7 +16,7 @@ using Wep.App.Dto.Responses;
 
 namespace Wep.App.Controllers
 {
-    [Route("api/test")]
+    [Route("api/tests")]
     public class TestController : ApplicationController
     {
         private readonly IMapper _mapper;
@@ -28,25 +28,27 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Teacher")]
         [HttpPost("create")]
-        public async Task<ApiResponse<TestDto>> CreateTest([FromBody] CreateTestDto dto, CancellationToken token)
+        public async Task<ApiResponse<TestDto>> CreateTest([FromBody] CreateTestDto dto, 
+            CancellationToken token)
         {
             var request = _mapper.Map<CreateTestRequest>(dto);
 
             return Ok(await Mediator.Send(request, token));
         }
         
-        [Authorize(Roles = "Teacher")]
-        [HttpGet("all")]
-        public async Task<ApiResponse<IEnumerable<TestDto>>> GetAllTests(CancellationToken token)
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{teacherId}/all")]
+        public async Task<ApiResponse<IEnumerable<TestDto>>> GetAllTests(int teacherId, 
+            CancellationToken token)
         {
-            return Ok(await Mediator.Send(new GetAllTestQueryRequest(), token));
+            return Ok(await Mediator.Send(new GetAllTestQueryRequest(teacherId), token));
         }
 
-        [Authorize(Roles = "Teacher")]
-        [HttpGet("info/{id}")]
-        public async Task<ApiResponse<TestWithQuestionsDto>> GetTest(int id)
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{teacherId}/{testId}/info")]
+        public async Task<ApiResponse<TestWithQuestionsDto>> GetTestInfo(int teacherId, int testId)
         {
-            return Ok(await Mediator.Send(new GetTestQueryRequest(id)));
+            return Ok(await Mediator.Send(new GetTestQueryRequest(teacherId, testId)));
         }
     }
 }
