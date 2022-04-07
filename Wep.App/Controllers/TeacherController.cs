@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
+using UseCases.Teachers.Dto;
+using UseCases.Teachers.Queries.GetTeachersGroupsQuery;
 using UseCases.Teachers.Queries.GetTeachersQuery;
 using UseCases.Teachers.Queries.GetTeachersTestsQuery;
 using UseCases.Test.Dto;
@@ -38,6 +40,14 @@ namespace Wep.App.Controllers
             CancellationToken token)
         {
             return Ok(await Mediator.Send(new GetTeachersTestsQueryRequest(request.Offset, request.Limit), token));
+        }
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("groups")]
+        public async Task<ApiResponse<Pagination<TeacherStudyGroupDto>>> GetTeacherGroups([FromQuery] GetGroupsRequestDto request, 
+            CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new GetTeachersGroupsQueryRequest(request.Title, request.StartDate, request.EndDate,
+                request.Offset, request.Limit), token));
         }
     }
 }
