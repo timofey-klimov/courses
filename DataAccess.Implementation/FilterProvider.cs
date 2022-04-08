@@ -1,6 +1,7 @@
 ﻿using DataAccess.Interfaces;
 using Entities.Base;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +19,14 @@ namespace DataAccess.Implementation
         public IQueryable<TEntity> GetQuery<TEntity>(IQueryable<TEntity> query, ISpecification<TEntity> spec) where TEntity : BaseEntity
         {
             var exp = spec.CreateCriteria();
+
+            return exp == null ? query : query.Where(exp);
+        }
+
+        public IEnumerable<TEntity> GetQueryEnumerable<TEntity>(IEnumerable<TEntity> query, ISpecification<TEntity> spec) where TEntity : BaseEntity
+        {
+            var exp = spec.CreateCriteria()
+                .Compile();
 
             return exp == null ? query : query.Where(exp);
         }

@@ -24,14 +24,19 @@ namespace DataAccess.Interfaces.Specifications.StudyGroup
         public override Expression<Func<Entities.StudyGroup, bool>> CreateCriteria()
         {
             ISpecification<Entities.StudyGroup> compositSpec = default;
+
             if (_title != null)
             {
                 compositSpec = new StudyGroupTitleContainsSpecification(_title);
             }
-            var spec = new StudyGroupCreateDataBetweenSpecification(_startDate, _endDate);
-            compositSpec = compositSpec == null ? spec : compositSpec.Or(spec);
 
-            return compositSpec?.CreateCriteria();
+            if (_startDate != null || _endDate != null)
+            {
+                var spec = new StudyGroupCreateDataBetweenSpecification(_startDate, _endDate);
+                compositSpec = compositSpec == null ? spec : compositSpec.Or(spec);
+            }
+
+            return compositSpec?.CreateCriteria() ?? AlwaysTrue();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Entities.Base;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,5 +12,8 @@ namespace DataAccess.Interfaces
 
         Task<int> GetCountQuery<TEntity>(IQueryable<TEntity> query, ISpecification<TEntity> spec)
              where TEntity : BaseEntity;
+
+        IEnumerable<TEntity> GetQueryEnumerable<TEntity>(IEnumerable<TEntity> query, ISpecification<TEntity> spec)
+           where TEntity : BaseEntity;
     }
 }

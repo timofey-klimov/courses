@@ -6,51 +6,55 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
-using UseCases.Teachers.Dto;
+using UseCases.Common.Participant;
+using UseCases.StudyGroup.Dto;
 
 namespace UseCases.Teachers.Queries.GetTeachersGroupsQuery
 {
-    public class GetTeachersGroupsQueryHandler : IRequestHandler<GetTeachersGroupsQueryRequest, Pagination<TeacherStudyGroupDto>>
+    public class GetTeachersGroupsQueryHandler : IRequestHandler<GetTeachersGroupsQueryRequest, Pagination<SimpleStudyGroupDto>>
     {
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
-        private readonly IFilterProvider _filterProvider;
 
-        public GetTeachersGroupsQueryHandler(IDbContext dbContext, ICurrentUserProvider currentUserProvider,IFilterProvider filterProvider)
+        public GetTeachersGroupsQueryHandler(IDbContext dbContext, ICurrentUserProvider currentUserProvider)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
-            _filterProvider = filterProvider ?? throw new ArgumentNullException(nameof(filterProvider));
         }
-        public async Task<Pagination<TeacherStudyGroupDto>> Handle(GetTeachersGroupsQueryRequest request, CancellationToken cancellationToken)
+
+        public async Task<Pagination<SimpleStudyGroupDto>> Handle(GetTeachersGroupsQueryRequest request, CancellationToken cancellationToken)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
             var spec = new StudyGroupFilterSpecification(request.Title, request.startDate, request.endDate);
 
-            var baseQuery = await _dbContext.Participants
+            var result = await _dbContext.Participants
                 .OfType<Teacher>()
                 .Include(x => x.StudyGroups)
                 .Select(x => new
                 {
                     Id = x.Id,
-                    Groups = _filterProvider.GetQuery(x.StudyGroups.AsQueryable(), spec)
+                    Groups = x.StudyGroups
+                        .AsQueryable()
+                        .Where(spec.CreateCriteria())
                         .Skip(request.offset)
                         .Take(request.limit)
                         .AsEnumerable(),
-                    Count = _filterProvider.GetQuery(x.StudyGroups.AsQueryable(), spec)
-                        .Skip(request.offset)
-                        .Take(request.limit)
+                    Count = x.StudyGroups
                         .Count()
                 })
                 .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
 
-
-            return default;
-           // return new Pagination<TeacherStudyGroupDto>(groupsDto, count);
+            if (result == null)
+                throw new ParticipantNotFoundException();
+    
+           return new Pagination<SimpleStudyGroupDto>(
+               result.Groups.Select(x => new SimpleStudyGroupDto(x.Id, x.Title, x.CreateDate)), 
+               result.Count);
         }
     }
 }

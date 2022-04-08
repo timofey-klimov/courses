@@ -17,5 +17,8 @@ namespace DataAccess.Interfaces.Specifications.Base
         {
             return new OrSpecification<T>(this, spec);
         }
+
+        protected Expression<Func<T, bool>> AlwaysTrue() =>
+            Expression.Lambda<Func<T, bool>>(Expression.Constant(true), Expression.Parameter(typeof(T), "_"));
     }
 }

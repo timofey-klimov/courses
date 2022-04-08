@@ -27,9 +27,8 @@ namespace DataAccess.Interfaces.Specifications.StudyGroup.Between
 
             if (_startDate != null && _endDate != null)
                 return x => (x.CreateDate >= _startDate) && (x.CreateDate <= _endDate);
-            
-             return x => true;
 
+            return default;
         }
     }
 }
