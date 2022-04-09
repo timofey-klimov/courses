@@ -62,7 +62,8 @@ namespace UseCases.Teachers.Queries.GetTeachersGroupsQuery
                 throw new ParticipantNotFoundException();
     
            return new Pagination<StudyGroupWithStudentCount>(
-               result.Groups.Select(x => new StudyGroupWithStudentCount(x.GroupInfo.Id, x.GroupInfo.Title, x.GroupInfo.CreateDate, x.StudentsCount)), 
+               result.Groups.Select(
+                   x => new StudyGroupWithStudentCount(x.GroupInfo.Id, x.GroupInfo.Title, x.GroupInfo.CreateDate, x.StudentsCount)), 
                result.Count);
         }
     }
