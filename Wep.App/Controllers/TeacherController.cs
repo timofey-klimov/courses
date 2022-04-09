@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
 using UseCases.StudyGroup.Dto;
+using UseCases.Teachers.Dto;
 using UseCases.Teachers.Queries.GetTeachersGroupsQuery;
 using UseCases.Teachers.Queries.GetTeachersQuery;
 using UseCases.Teachers.Queries.GetTeachersTestsQuery;
@@ -45,7 +46,7 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Teacher")]
         [HttpGet("groups")]
-        public async Task<ApiResponse<Pagination<SimpleStudyGroupDto>>> GetTeacherGroups([FromQuery] GetGroupsRequestDto request, 
+        public async Task<ApiResponse<Pagination<StudyGroupWithStudentCount>>> GetTeacherGroups([FromQuery] GetGroupsRequestDto request, 
             CancellationToken token)
         {
             return Ok(await Mediator.Send(new GetTeachersGroupsQueryRequest(request.Title, request.StartDate, request.EndDate,

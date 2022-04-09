@@ -12,10 +12,11 @@ using System.Threading.Tasks;
 using UseCases.Common.Dto;
 using UseCases.Common.Participant;
 using UseCases.StudyGroup.Dto;
+using UseCases.Teachers.Dto;
 
 namespace UseCases.Teachers.Queries.GetTeachersGroupsQuery
 {
-    public class GetTeachersGroupsQueryHandler : IRequestHandler<GetTeachersGroupsQueryRequest, Pagination<SimpleStudyGroupDto>>
+    public class GetTeachersGroupsQueryHandler : IRequestHandler<GetTeachersGroupsQueryRequest, Pagination<StudyGroupWithStudentCount>>
     {
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
@@ -26,7 +27,7 @@ namespace UseCases.Teachers.Queries.GetTeachersGroupsQuery
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
         }
 
-        public async Task<Pagination<SimpleStudyGroupDto>> Handle(GetTeachersGroupsQueryRequest request, CancellationToken cancellationToken)
+        public async Task<Pagination<StudyGroupWithStudentCount>> Handle(GetTeachersGroupsQueryRequest request, CancellationToken cancellationToken)
         {
             _ = request ?? throw new ArgumentNullException(nameof(request));
 
@@ -35,16 +36,24 @@ namespace UseCases.Teachers.Queries.GetTeachersGroupsQuery
             var result = await _dbContext.Participants
                 .OfType<Teacher>()
                 .Include(x => x.StudyGroups)
+                    .ThenInclude(x => x.Students)
                 .Select(x => new
                 {
                     Id = x.Id,
                     Groups = x.StudyGroups
                         .AsQueryable()
                         .Where(spec.CreateCriteria())
+                        .Select(x => new
+                        {
+                            GroupInfo = x,
+                            StudentsCount = x.Students.Count()
+                        })
                         .Skip(request.offset)
                         .Take(request.limit)
                         .AsEnumerable(),
                     Count = x.StudyGroups
+                        .AsQueryable()
+                        .Where(spec.CreateCriteria())
                         .Count()
                 })
                 .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
@@ -52,8 +61,8 @@ namespace UseCases.Teachers.Queries.GetTeachersGroupsQuery
             if (result == null)
                 throw new ParticipantNotFoundException();
     
-           return new Pagination<SimpleStudyGroupDto>(
-               result.Groups.Select(x => new SimpleStudyGroupDto(x.Id, x.Title, x.CreateDate)), 
+           return new Pagination<StudyGroupWithStudentCount>(
+               result.Groups.Select(x => new StudyGroupWithStudentCount(x.GroupInfo.Id, x.GroupInfo.Title, x.GroupInfo.CreateDate, x.StudentsCount)), 
                result.Count);
         }
     }
