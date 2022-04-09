@@ -13,8 +13,14 @@ namespace DataAccess.Implementation.Configurations
             builder.Property(x => x.Title)
                 .IsRequired();
 
+            builder.HasMany(x => x.AssignedTests)
+                .WithOne();
+
             builder.Metadata.FindNavigation(nameof(StudyGroup.Students))
                 .SetField("_students");
+
+            builder.Metadata.FindNavigation(nameof(StudyGroup.AssignedTests))
+                .SetField("_assignTests");
         }
     }
 }

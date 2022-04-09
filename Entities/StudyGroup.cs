@@ -11,7 +11,11 @@ namespace Entities
         public string Title { get; private set; }
 
         private List<StudentStudyGroup> _students;
+        private List<AssignedTest> _assignTests;
+
         public IReadOnlyCollection<StudentStudyGroup> Students => _students;
+
+        public IReadOnlyCollection<AssignedTest> AssignedTests => _assignTests;
 
         public StudyGroup(string title, IEnumerable<Student> students)
         {
@@ -32,5 +36,13 @@ namespace Entities
 
         public void RemoveStudents(ICollection<Student> students) =>
             _students.RemoveAll(x => students.Contains(x.Student));
+
+        public void AssignTest(AssignedTest test)
+        {
+            if (_assignTests.Contains(test))
+                throw new TestAlreadyAssignedException();
+
+            _assignTests.Add(test);
+        }
     }
 }

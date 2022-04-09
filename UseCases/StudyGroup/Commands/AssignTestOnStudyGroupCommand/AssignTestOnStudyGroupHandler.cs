@@ -1,4 +1,5 @@
-﻿using Authorization.Interfaces;
+﻿using Application.Interfaces.StudyGroups;
+using Authorization.Interfaces;
 using DataAccess.Interfaces;
 using Entities;
 using Entities.Exceptions;
@@ -19,15 +20,18 @@ namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
         private readonly ILogger<AssignTestOnStudyGroupHandler> _logger;
+        private readonly IAssignedTestManager _assignedTestManager;
 
         public AssignTestOnStudyGroupHandler(
             IDbContext dbContext, 
             ICurrentUserProvider currentUserProvider,
-            ILogger<AssignTestOnStudyGroupHandler> logger)
+            ILogger<AssignTestOnStudyGroupHandler> logger,
+            IAssignedTestManager assignedTestManager)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _assignedTestManager = assignedTestManager ?? throw new ArgumentNullException(nameof(assignedTestManager));
         }
 
         public async Task<AssignedTestDto> Handle(AssignTestOnStudyGroupRequest request, CancellationToken cancellationToken)
@@ -45,37 +49,44 @@ namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
             if (result == null || result.Test == null)
                 throw new TestNotFoundException();
 
-            var group = await _dbContext.StudyGroups
+            var groupInfo = await _dbContext.StudyGroups
                 .Include(x => x.Students)
                     .ThenInclude(x => x.Student)
                         .ThenInclude(x => x.StudentAssignedTests)
+                            .ThenInclude(x => x.AssignedTest)
                 .Include(x => x.Students)
                     .ThenInclude(x => x.StudyGroup)
+                .Include(x => x.AssignedTests)
                 .Select(x => new
                 {
                     GroupId = x.Id,
-                    Students = x.GetEnrolledStudents()
+                    Group = x,
                 })
                 .FirstOrDefaultAsync(x => x.GroupId == request.GroupId);
 
-            if (group == null || group.Students == null)
+            if (groupInfo == null || groupInfo.Group == null)
                 throw new GroupNotFoundException();
 
             var assignTest = new AssignedTest(result.Test, request.Deadline);
 
-            foreach (var student in group.Students)
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
                 try
                 {
-                    student.AssignTest(assignTest);
+                    _assignedTestManager.AssignTestOnStudyGroup(assignTest, 
+                        groupInfo.Group, (x) => _logger.LogError(x));
+
+                    groupInfo.Group.AssignTest(assignTest);
+
+                    await _dbContext.SaveChangesAsync();
+
+                    await transaction.CommitAsync();
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex.Message);
+                    await transaction.RollbackAsync();
                 }
             }
-
-            await _dbContext.SaveChangesAsync();
 
             return new AssignedTestDto(assignTest.Id, assignTest.CreateDate, assignTest.Deadline, result.Test.Title);
         }

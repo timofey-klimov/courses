@@ -27,6 +27,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.Interfaces", "Ma
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.Impl", "MailSender.Impl\MailSender.Impl.csproj", "{76A6B3D7-CB5E-4C27-AF2F-F214DAB3D800}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Interfaces", "Application.Interfaces\Application.Interfaces.csproj", "{DFDD6AEF-10E9-4527-82DE-712C41D2B38E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Implementation", "Application.Implementation\Application.Implementation.csproj", "{3E1D9C6D-217F-483D-8351-56F254E55119}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +77,14 @@ Global
 		{76A6B3D7-CB5E-4C27-AF2F-F214DAB3D800}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76A6B3D7-CB5E-4C27-AF2F-F214DAB3D800}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76A6B3D7-CB5E-4C27-AF2F-F214DAB3D800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFDD6AEF-10E9-4527-82DE-712C41D2B38E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFDD6AEF-10E9-4527-82DE-712C41D2B38E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFDD6AEF-10E9-4527-82DE-712C41D2B38E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFDD6AEF-10E9-4527-82DE-712C41D2B38E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E1D9C6D-217F-483D-8351-56F254E55119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E1D9C6D-217F-483D-8351-56F254E55119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E1D9C6D-217F-483D-8351-56F254E55119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E1D9C6D-217F-483D-8351-56F254E55119}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

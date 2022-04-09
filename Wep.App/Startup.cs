@@ -1,3 +1,5 @@
+using Application.Implementation.StudyGroups;
+using Application.Interfaces.StudyGroups;
 using Authorization.Impl;
 using Authorization.Impl.Settings;
 using Authorization.Interfaces;
@@ -48,6 +50,7 @@ namespace Wep.App
             services.AddScoped<IParticipantFactory, ParticipantFactory>();
             services.AddScoped<IFilterProvider, FilterProvider>();
             services.AddScoped<ITestMapService, TestMapService>();
+            services.AddScoped<IAssignedTestManager, AssignedTestManager>();
             var jwtSettings = _cfg.GetSection(nameof(JwtSecuritySettings)).Get<JwtSecuritySettings>();
             var stmpSettings = _cfg.GetSection(nameof(SmtpClientSettings)).Get<SmtpClientSettings>();
             services.AddScoped<IMailSender, MailSender.Impl.MailSender>();

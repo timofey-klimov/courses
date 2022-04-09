@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application.Interfaces\Application.Interfaces.csproj" />
     <ProjectReference Include="..\Authorization.Interfaces\Authorization.Interfaces.csproj" />
     <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
     <ProjectReference Include="..\Entities\Entities.csproj" />

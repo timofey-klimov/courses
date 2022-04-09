@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
-using UseCases.StudyGroup.Dto;
 using UseCases.Teachers.Dto;
+using UseCases.Teachers.Queries.GetStudyGroupInfoQuery;
 using UseCases.Teachers.Queries.GetTeachersGroupsQuery;
 using UseCases.Teachers.Queries.GetTeachersQuery;
 using UseCases.Teachers.Queries.GetTeachersTestsQuery;
@@ -51,6 +51,14 @@ namespace Wep.App.Controllers
         {
             return Ok(await Mediator.Send(new GetTeachersGroupsQueryRequest(request.Title, request.StartDate, request.EndDate,
                 request.Offset, request.Limit), token));
+        }
+
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("groups/info/{groupId}")]
+        public async Task<ApiResponse<StudyGroupFullInfoDto>> GetStudyGroupInfo(int groupId,
+            CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new GetStudyGroupInfoRequest(groupId), token));
         }
     }
 }
