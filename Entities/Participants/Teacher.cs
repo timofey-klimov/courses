@@ -24,6 +24,7 @@ namespace Entities.Participants
         public IReadOnlyCollection<StudyGroup> StudyGroups => _groups;
 
 
+
         public void CreateNewTest(Test test)
         {
             if (_tests.Any(x => x.Title == test.Title))

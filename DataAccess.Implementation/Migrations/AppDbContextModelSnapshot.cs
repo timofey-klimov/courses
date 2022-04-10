@@ -445,9 +445,11 @@ namespace DataAccess.Implementation.Migrations
 
             modelBuilder.Entity("Entities.StudyGroup", b =>
                 {
-                    b.HasOne("Entities.Participants.Teacher", null)
+                    b.HasOne("Entities.Participants.Teacher", "Teacher")
                         .WithMany("StudyGroups")
                         .HasForeignKey("TeacherId");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Entities.Test", b =>

@@ -17,6 +17,8 @@ namespace Entities
 
         public IReadOnlyCollection<AssignedTest> AssignedTests => _assignTests;
 
+        public Teacher Teacher { get; private set; }
+
         public StudyGroup(string title, IEnumerable<Student> students)
         {
             if (!students?.Any() == true)

@@ -18,7 +18,8 @@ namespace DataAccess.Implementation.Configurations.Users
 
 
             builder.HasMany(x => x.StudyGroups)
-                .WithOne();
+                .WithOne(x => x.Teacher)
+                .HasForeignKey("TeacherId");
 
             builder.Metadata
                 .FindNavigation(nameof(Teacher.StudyGroups))

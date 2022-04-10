@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using Authorization.Interfaces;
+using DataAccess.Interfaces;
 using Entities.Participants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
     public class GetAllGroupsRequestHandler : IRequestHandler<GetAllGroupsRequest, Pagination<StudyGroupDto>>
     {
         private readonly IDbContext _dbContext;
+        private readonly ICurrentUserProvider _currentUserProvider;
 
-        public GetAllGroupsRequestHandler(IDbContext dbContext)
+        public GetAllGroupsRequestHandler(IDbContext dbContext, ICurrentUserProvider currentUserProvider)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
         }
 
         public async Task<Pagination<StudyGroupDto>> Handle(GetAllGroupsRequest request, CancellationToken cancellationToken)
@@ -28,33 +31,24 @@ namespace UseCases.StudyGroup.Queries.GetAllGroupsQuery
 
             var query = _dbContext.Participants
                 .OfType<Teacher>()
-                .Include(x => x.StudyGroups);
+                .Include(x => x.StudyGroups)
+                    .ThenInclude(x => x.Teacher)
+                .Where(x => x.CreatedBy == _currentUserProvider.GetUserId());
                 
             var totalCount = await query.SelectMany(x => x.StudyGroups).CountAsync();
 
-            var result = query
-                .Select(x => new
-                {
-                    Teacher = x,
-                    Groups = x.StudyGroups
-                        .Skip(request.Offset)
-                        .Take(request.Limit)
-                })
-                .AsEnumerable();
+            var result = query.SelectMany(x => x.StudyGroups)
+                .Skip(request.Offset)
+                .Take(request.Limit);
                 
-            var count = result.SelectMany(x => x.Groups).Count();
 
-            var list = new List<StudyGroupDto>(count);
+            var list = new List<StudyGroupDto>(result.Count());
                 
             foreach (var item in result)
             {
-                var teacher = item.Teacher;
-
-                foreach (var group in item.Groups)
-                {
-                    list.Add(new StudyGroupDto
-                        (group.Id, group.Title, new TeacherDto(teacher.Id, teacher.Name, teacher.Surname, teacher.Login), group.CreateDate));
-                }
+                list.Add(new StudyGroupDto
+                    (item.Id, item.Title, 
+                    new TeacherDto(item.Teacher.Id, item.Teacher.Name, item.Teacher.Surname, item.Teacher.Login), item.CreateDate));
             }
 
             return new Pagination<StudyGroupDto>(list, totalCount);
