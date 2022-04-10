@@ -28,7 +28,8 @@ namespace UseCases.Participant.Queries.GetParticipantsQuery
             var spec = new ParticipantFilterSpecification(request.Name, request.Surname, request.Login, request.IsOnlyActive);
 
             var baseQuery = _dbContext.Participants
-                .Include(x => x.Role);
+                .Include(x => x.Role)
+                .Where(x => x.CreatedBy == _currentUserProvider.GetUserId());
 
             var count = await _filterProvider.GetCountQuery(baseQuery, spec);
 
