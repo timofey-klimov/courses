@@ -42,7 +42,6 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
                     Students = x.StudentTeachers
                         .Select(x => x.Student)
                         .Where(x => request.StudentsId.Contains(x.Id))
-                    
                 })
                 .FirstOrDefaultAsync(x => x.TeacherId == _currentUserProvider.GetUserId());
 
