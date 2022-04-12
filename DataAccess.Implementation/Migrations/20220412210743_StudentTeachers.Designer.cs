@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Implementation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220412204936_StudentTeachers")]
+    [Migration("20220412210743_StudentTeachers")]
     partial class StudentTeachers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -433,13 +433,13 @@ namespace DataAccess.Implementation.Migrations
                     b.HasOne("Entities.Participants.Student", "Student")
                         .WithMany("StudentTeachers")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Participants.Teacher", "Teacher")
                         .WithMany("StudentTeachers")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Student");

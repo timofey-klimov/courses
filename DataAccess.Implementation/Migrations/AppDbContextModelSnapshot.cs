@@ -431,13 +431,13 @@ namespace DataAccess.Implementation.Migrations
                     b.HasOne("Entities.Participants.Student", "Student")
                         .WithMany("StudentTeachers")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Participants.Teacher", "Teacher")
                         .WithMany("StudentTeachers")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Student");

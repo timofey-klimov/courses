@@ -32,6 +32,8 @@ namespace UseCases.StudyGroup.Commands.CreateStudyGroupCommand
             var teacher = await _dbContext.Participants
                 .OfType<Entities.Participants.Teacher>()
                 .Include(x => x.StudyGroups)
+                .Include(x => x.StudentTeachers)
+                    .ThenInclude(x => x.Student)
                 .FirstOrDefaultAsync(x => x.Id == request.TeacherId);
 
             if (teacher == null)

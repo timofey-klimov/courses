@@ -50,7 +50,6 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
             if (result == null || result.Test == null)
                 throw new TestNotFoundException();
 
-
             var assignTest = new AssignedTest(result.Test, request.Deadline);
 
             foreach (var student in result.Students)
