@@ -50,7 +50,7 @@ namespace Wep.App
             services.AddScoped<IParticipantFactory, ParticipantFactory>();
             services.AddScoped<IFilterProvider, FilterProvider>();
             services.AddScoped<ITestMapService, TestMapService>();
-            services.AddScoped<IAssignedTestManager, AssignedTestManager>();
+            services.AddScoped<IStudyGroupService, StudyGroupService>();
             var jwtSettings = _cfg.GetSection(nameof(JwtSecuritySettings)).Get<JwtSecuritySettings>();
             var stmpSettings = _cfg.GetSection(nameof(SmtpClientSettings)).Get<SmtpClientSettings>();
             services.AddScoped<IMailSender, MailSender.Impl.MailSender>();
