@@ -65,7 +65,6 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
             await _dbContext.SaveChangesAsync();
 
             return new AssignTestDto(result.Test.Title, assignTest.CreateDate, assignTest.Deadline);
-
         }
     }
 }
