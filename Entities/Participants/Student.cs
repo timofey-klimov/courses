@@ -22,7 +22,8 @@ namespace Entities.Participants
 
         public Student AssignTest(AssignedTest assignedTest)
         {
-            if (_tests.Any(x => x.AssignedTest.Test == assignedTest.Test))
+            if (_tests.Any(x => x.AssignedTest.Test == assignedTest.Test 
+                    && x.AssignedTest.Deadline == assignedTest.Deadline))
                 throw new TestAlreadyAssignedException();
 
             _tests.Add(new StudentAssignTest(this, assignedTest));
