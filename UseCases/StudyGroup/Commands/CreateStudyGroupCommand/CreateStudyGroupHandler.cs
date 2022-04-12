@@ -1,4 +1,5 @@
-﻿using DataAccess.Interfaces;
+﻿using Application.Interfaces.StudyGroups;
+using DataAccess.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,9 +16,12 @@ namespace UseCases.StudyGroup.Commands.CreateStudyGroupCommand
     public class CreateStudyGroupHandler : IRequestHandler<CreateStudyGroupRequest, StudyGroupDto>
     {
         private readonly IDbContext _dbContext;
-        public CreateStudyGroupHandler(IDbContext dbContext)
+        private readonly IStudyGroupService _studyGroupService;
+
+        public CreateStudyGroupHandler(IDbContext dbContext, IStudyGroupService studyGroupService)
         {
             _dbContext =  dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _studyGroupService = studyGroupService ?? throw new ArgumentNullException(nameof(studyGroupService));
         }
 
         public async Task<StudyGroupDto> Handle(CreateStudyGroupRequest request, CancellationToken cancellationToken)
@@ -38,9 +42,7 @@ namespace UseCases.StudyGroup.Commands.CreateStudyGroupCommand
                 .Where(x => request.StudentsIds.Any(y => y == x.Id))
                 .AsEnumerable();
 
-            var studyGroup = new Entities.StudyGroup(request.Title, students);
-
-            teacher.AssignGroup(studyGroup);
+            var studyGroup = _studyGroupService.CreateStudyGroup(students, teacher, request.Title);
 
             await _dbContext.SaveChangesAsync();
 

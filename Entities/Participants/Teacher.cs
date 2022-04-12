@@ -11,6 +11,7 @@ namespace Entities.Participants
         {
             _tests = new List<Test>();
             _groups = new List<StudyGroup>();
+            _studentTeachers = new List<StudentTeacher>();
         }
 
         protected Teacher()
@@ -23,7 +24,9 @@ namespace Entities.Participants
         private List<StudyGroup> _groups;
         public IReadOnlyCollection<StudyGroup> StudyGroups => _groups;
 
+        private List<StudentTeacher> _studentTeachers;
 
+        public IReadOnlyCollection<StudentTeacher> StudentTeachers => _studentTeachers;
 
         public void CreateNewTest(Test test)
         {
@@ -35,7 +38,7 @@ namespace Entities.Participants
 
         public Test GetCreatedTest(int id)
         {
-            return _tests.FirstOrDefault(x => x.Id == id);
+            return _tests?.FirstOrDefault(x => x.Id == id);
         }
 
         public void AssignGroup(StudyGroup studyGroup)
@@ -45,5 +48,15 @@ namespace Entities.Participants
 
             _groups.Add(studyGroup);
         }
+
+        public void AddStudent(Student student)
+        {
+            if (_studentTeachers.Any(x => x.Student == student))
+                return;
+            _studentTeachers.Add(new StudentTeacher(this, student));
+        }
+
+        public IReadOnlyCollection<Student> GetAllStudents()
+            => this.StudentTeachers?.Select(x => x.Student)?.ToList();
     }
 }

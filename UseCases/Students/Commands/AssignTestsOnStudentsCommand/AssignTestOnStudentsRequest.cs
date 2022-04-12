@@ -5,5 +5,6 @@ using UseCases.Common.Dto;
 
 namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
 {
-    public record AssignTestsOnStudentsRequest(int testsId, IEnumerable<int> studentsId, DateTime deadline) : IRequest<AssignTestDto>;
+    public record AssignTestsOnStudentsRequest(int TestsId, IEnumerable<int> StudentsId, DateTime Deadline) 
+        : IRequest<AssignTestDto>;
 }

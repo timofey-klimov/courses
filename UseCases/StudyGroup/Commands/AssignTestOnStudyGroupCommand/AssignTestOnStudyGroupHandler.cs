@@ -20,13 +20,13 @@ namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
         private readonly ILogger<AssignTestOnStudyGroupHandler> _logger;
-        private readonly IAssignedTestManager _assignedTestManager;
+        private readonly IStudyGroupService _assignedTestManager;
 
         public AssignTestOnStudyGroupHandler(
             IDbContext dbContext, 
             ICurrentUserProvider currentUserProvider,
             ILogger<AssignTestOnStudyGroupHandler> logger,
-            IAssignedTestManager assignedTestManager)
+            IStudyGroupService assignedTestManager)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));

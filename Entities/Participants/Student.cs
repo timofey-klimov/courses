@@ -10,6 +10,9 @@ namespace Entities.Participants
         public Student(string login, string name, string surname, string password, string hashedPassword, ParticipantRole userRole) 
             : base(login, name, surname, password, hashedPassword, userRole)
         {
+            _tests = new List<StudentAssignTest>();
+            _groups = new List<StudentStudyGroup>();
+            _studentTeachers = new List<StudentTeacher>();
         }
 
         private List<StudentAssignTest> _tests;
@@ -18,6 +21,10 @@ namespace Entities.Participants
 
         private List<StudentStudyGroup> _groups;
         public IReadOnlyCollection<StudentStudyGroup> StudentStudyGroups => _groups;
+
+        private List<StudentTeacher> _studentTeachers;
+
+        public IReadOnlyCollection<StudentTeacher> StudentTeachers => _studentTeachers;
 
 
         public Student AssignTest(AssignedTest assignedTest)
@@ -45,6 +52,9 @@ namespace Entities.Participants
             => this.StudentStudyGroups?.Select(x => x.StudyGroup)?.ToList();
 
         public IReadOnlyCollection<AssignedTest> AssignedTests()
-            => this.StudentAssignedTests.Select(x => x.AssignedTest)?.ToList();
+            => this.StudentAssignedTests?.Select(x => x.AssignedTest)?.ToList();
+
+        public IReadOnlyCollection<Teacher> GetAllTeachers()
+            => this.StudentTeachers?.Select(x => x.Teacher)?.ToList();
     }
 }

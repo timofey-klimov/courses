@@ -7,12 +7,10 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
-using UseCases.Students.Exceptions;
 using UseCases.Test.Exceptions;
 
 namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
@@ -33,37 +31,29 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
         public async Task<AssignTestDto> Handle(AssignTestsOnStudentsRequest request, CancellationToken cancellationToken)
         {
             var result = await _dbContext.Participants
-                .OfType<Entities.Participants.Teacher>()
+                .OfType<Teacher>()
                 .Include(x => x.CreatedTests)
+                .Include(x => x.StudentTeachers)
+                    .ThenInclude(x => x.Student)
                 .Select(x => new
                 {
                     TeacherId = x.Id,
-                    Test = x.CreatedTests.FirstOrDefault(x =>x.Id == request.testsId)                
+                    Test = x.CreatedTests.FirstOrDefault(x =>x.Id == request.TestsId),
+                    Students = x.StudentTeachers
+                        .Select(x => x.Student)
+                        .Where(x => request.StudentsId.Contains(x.Id))
+                    
                 })
                 .FirstOrDefaultAsync(x => x.TeacherId == _currentUserProvider.GetUserId());
-
 
 
             if (result == null || result.Test == null)
                 throw new TestNotFoundException();
 
-            var students = _dbContext.Participants
-                .OfType<Student>()
-                .Include(x => x.StudentStudyGroups)
-                    .ThenInclude(x => x.StudyGroup)
-                .Include(x => x.StudentAssignedTests)
-                    .ThenInclude(x => x.AssignedTest)
-                .Where(x => request.studentsId.Contains(x.Id) && x.StudentStudyGroups
-                    .Select(y => y.StudyGroup)
-                    .Any(z => z.Teacher.Id == result.TeacherId))
-                    .AsEnumerable();
 
-            if (!students.Any())
-                throw new StudentNotFoundException();
+            var assignTest = new AssignedTest(result.Test, request.Deadline);
 
-            var assignTest = new AssignedTest(result.Test, request.deadline);
-
-            foreach (var student in students)
+            foreach (var student in result.Students)
             {
                 try
                 {

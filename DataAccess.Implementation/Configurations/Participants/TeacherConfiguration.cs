@@ -16,7 +16,6 @@ namespace DataAccess.Implementation.Configurations.Users
                 .WithOne()
                 .HasForeignKey(x => x.CreatedBy);
 
-
             builder.HasMany(x => x.StudyGroups)
                 .WithOne(x => x.Teacher)
                 .HasForeignKey("TeacherId");
@@ -24,6 +23,10 @@ namespace DataAccess.Implementation.Configurations.Users
             builder.Metadata
                 .FindNavigation(nameof(Teacher.StudyGroups))
                 .SetField("_groups");
+
+            builder.Metadata
+                .FindNavigation(nameof(Teacher.StudentTeachers))
+                .SetField("_studentTeachers");
         }
     }
 }

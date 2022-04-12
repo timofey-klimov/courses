@@ -17,6 +17,10 @@ namespace DataAccess.Implementation.Configurations.Users
                 .FindNavigation(nameof(Student.StudentStudyGroups))
                 .SetField("_groups");
 
+            builder.Metadata
+                .FindNavigation(nameof(Student.StudentTeachers))
+                .SetField("_studentTeachers");
+
         }
     }
 }
