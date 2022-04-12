@@ -35,7 +35,7 @@ namespace UseCases.Test.Queries.GetTestQuery
                 .Select(teacher => new
                 {
                     TeacherId = teacher.Id,
-                    Test = teacher.GetCreatedTest(request.TestId)
+                    Test = teacher.CreatedTests.FirstOrDefault(x => x.Id == request.TestId)
                 })
                .FirstOrDefaultAsync(x => x.TeacherId == request.TeacherId);
 
