@@ -15,11 +15,13 @@ namespace DataAccess.Implementation.Configurations
 
             builder.HasOne(x => x.AssignedTest)
                 .WithMany(x => x.StudentAssignTests)
-                .HasForeignKey(x => x.AssignTestId);
+                .HasForeignKey(x => x.AssignTestId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Student)
                 .WithMany(x => x.StudentAssignedTests)
-                .HasForeignKey(x => x.StudentId);
+                .HasForeignKey(x => x.StudentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(x => x.CreateDate)
                 .HasColumnType("datetime2(0)")
