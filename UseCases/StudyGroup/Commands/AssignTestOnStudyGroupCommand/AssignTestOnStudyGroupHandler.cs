@@ -85,6 +85,7 @@ namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
+                    throw ex;
                 }
             }
 
