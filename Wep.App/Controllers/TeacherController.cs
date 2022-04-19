@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
 using UseCases.Teachers.Dto;
+using UseCases.Teachers.Queries.GetStudentsQuery;
 using UseCases.Teachers.Queries.GetStudyGroupInfoQuery;
 using UseCases.Teachers.Queries.GetTeachersGroupsQuery;
 using UseCases.Teachers.Queries.GetTeachersQuery;
@@ -59,6 +60,14 @@ namespace Wep.App.Controllers
             CancellationToken token)
         {
             return Ok(await Mediator.Send(new GetStudyGroupInfoRequest(groupId), token));
+        }
+
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("students/all")]
+        public async Task<ApiResponse<Pagination<StudentDto>>> GetTeacherStudents([FromQuery] GetStudentsRequest dto,
+            CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new GetTeacherStudentsRequest(dto.Offset, dto.Limit), token));
         }
     }
 }

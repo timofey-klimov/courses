@@ -126,7 +126,6 @@ namespace Wep.App
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<ParticipantBlockHandler>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
