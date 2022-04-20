@@ -31,7 +31,7 @@ namespace Wep.App.Controllers
 
         [Authorize(Roles = "Teacher")]
         [HttpPut("students/assignTests/{testId}/enroll")]
-        public async Task<ApiResponse<AssignTestDto>> AssignTestOnStudents(int testId, [FromBody] AssignTestRequest request,
+        public async Task<ApiResponse<AssignedTestDto>> AssignTestOnStudents(int testId, [FromBody] AssignTestRequest request,
             CancellationToken cancellationToken)
         {
             return Ok(await Mediator.Send(new AssignTestsOnStudentsRequest(testId, request.Students, request.Deadline), cancellationToken));

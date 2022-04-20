@@ -16,7 +16,7 @@ using UseCases.Test.Exceptions;
 
 namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
 {
-    public class AssignTestsOnStudentsHandler : IRequestHandler<AssignTestsOnStudentsRequest, AssignTestDto>
+    public class AssignTestsOnStudentsHandler : IRequestHandler<AssignTestsOnStudentsRequest, AssignedTestDto>
     {
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
@@ -34,7 +34,7 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
             _mapper = assignTestMapper ?? throw new ArgumentNullException(nameof(assignTestMapper));
         }
 
-        public async Task<AssignTestDto> Handle(AssignTestsOnStudentsRequest request, CancellationToken cancellationToken)
+        public async Task<AssignedTestDto> Handle(AssignTestsOnStudentsRequest request, CancellationToken cancellationToken)
         {
             var result = await _dbContext.Participants
                 .OfType<Teacher>()

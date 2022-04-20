@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using System;
-using UseCases.StudyGroup.Dto;
+using UseCases.Common.Dto;
 
 namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
 {

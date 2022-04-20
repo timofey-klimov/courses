@@ -7,9 +7,9 @@ namespace UseCases.Teachers.Dto
     {
         public StudentDto StudentDto { get; }
 
-        public IEnumerable<AssignTestDto> AssignTests { get; }
+        public IEnumerable<AssignedTestDto> AssignTests { get; }
 
-        public StudentInfoDto(StudentDto studentDto, IEnumerable<AssignTestDto> assignTests)
+        public StudentInfoDto(StudentDto studentDto, IEnumerable<AssignedTestDto> assignTests)
         {
             StudentDto = studentDto;
             AssignTests = assignTests;

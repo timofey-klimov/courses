@@ -10,6 +10,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.Dto;
+using UseCases.Common.Services.Abstract.Mapper;
 using UseCases.StudyGroup.Dto;
 using UseCases.Test.Exceptions;
 
@@ -21,17 +23,20 @@ namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
         private readonly ICurrentUserProvider _currentUserProvider;
         private readonly ILogger<AssignTestOnStudyGroupHandler> _logger;
         private readonly IStudyGroupService _assignedTestManager;
+        private readonly IAssignTestMapper _mapper;
 
         public AssignTestOnStudyGroupHandler(
             IDbContext dbContext, 
             ICurrentUserProvider currentUserProvider,
             ILogger<AssignTestOnStudyGroupHandler> logger,
-            IStudyGroupService assignedTestManager)
+            IStudyGroupService assignedTestManager,
+            IAssignTestMapper mapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _assignedTestManager = assignedTestManager ?? throw new ArgumentNullException(nameof(assignedTestManager));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<AssignedTestDto> Handle(AssignTestOnStudyGroupRequest request, CancellationToken cancellationToken)
@@ -85,11 +90,11 @@ namespace UseCases.StudyGroup.Commands.AssignTestOnStudyGroupCommand
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
-                    throw ex;
+                    throw new Exception(ex.Message, ex);
                 }
             }
 
-            return new AssignedTestDto(assignTest.Id, assignTest.CreateDate, assignTest.Deadline, result.Test.Title);
+            return _mapper.ToAssignTestDto(assignTest);
         }
     }
 }

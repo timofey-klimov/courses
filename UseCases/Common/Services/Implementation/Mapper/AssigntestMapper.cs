@@ -14,9 +14,9 @@ namespace UseCases.Common.Services.Implementation.Mapper
             _assignTestService = assignTestService ?? throw new ArgumentNullException(nameof(assignTestService));
         }
 
-        public AssignTestDto ToAssignTestDto(AssignedTest assignedTest)
+        public AssignedTestDto ToAssignTestDto(AssignedTest assignedTest)
         {
-            return new AssignTestDto(
+            return new AssignedTestDto(
                 assignedTest.Id,
                 assignedTest.Test.Title,
                 assignedTest.CreateDate,

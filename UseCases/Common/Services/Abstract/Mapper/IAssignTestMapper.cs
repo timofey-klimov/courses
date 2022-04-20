@@ -10,6 +10,6 @@ namespace UseCases.Common.Services.Abstract.Mapper
 {
     public interface IAssignTestMapper
     {
-        AssignTestDto ToAssignTestDto(AssignedTest assignedTest);
+        AssignedTestDto ToAssignTestDto(AssignedTest assignedTest);
     }
 }
