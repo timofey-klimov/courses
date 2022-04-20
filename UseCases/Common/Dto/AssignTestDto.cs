@@ -2,6 +2,5 @@
 
 namespace UseCases.Common.Dto
 {
-    public record AssignTestDto(string Title, DateTime CreateDate, DateTime Deadline);
-    
+    public record AssignTestDto(int Id,string Title, DateTime CreateDate, DateTime Deadline, bool overDueSoon, bool overDue);
 }

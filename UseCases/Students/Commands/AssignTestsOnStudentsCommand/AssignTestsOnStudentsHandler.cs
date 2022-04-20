@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
+using UseCases.Common.Services.Abstract.Mapper;
 using UseCases.Test.Exceptions;
 
 namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
@@ -20,14 +21,19 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
         private readonly ILogger<AssignTestsOnStudentsHandler> _logger;
+        private readonly IAssignTestMapper _mapper;
+
         public AssignTestsOnStudentsHandler(IDbContext dbContext, 
             ICurrentUserProvider currentUserProvider, 
-            ILogger<AssignTestsOnStudentsHandler> logger)
+            ILogger<AssignTestsOnStudentsHandler> logger,
+            IAssignTestMapper assignTestMapper)
         {
-            _dbContext = dbContext;
-            _currentUserProvider = currentUserProvider;
-            _logger = logger;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = assignTestMapper ?? throw new ArgumentNullException(nameof(assignTestMapper));
         }
+
         public async Task<AssignTestDto> Handle(AssignTestsOnStudentsRequest request, CancellationToken cancellationToken)
         {
             var result = await _dbContext.Participants
@@ -35,6 +41,9 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
                 .Include(x => x.CreatedTests)
                 .Include(x => x.StudentTeachers)
                     .ThenInclude(x => x.Student)
+                        .ThenInclude(x => x.StudentAssignedTests)
+                            .ThenInclude(x => x.AssignedTest)
+                                .ThenInclude(x => x.Test)
                 .Select(x => new
                 {
                     TeacherId = x.Id,
@@ -64,7 +73,7 @@ namespace UseCases.Students.Commands.AssignTestsOnStudentsCommand
             }
             await _dbContext.SaveChangesAsync();
 
-            return new AssignTestDto(result.Test.Title, assignTest.CreateDate, assignTest.Deadline);
+            return _mapper.ToAssignTestDto(assignTest);
         }
     }
 }

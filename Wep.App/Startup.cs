@@ -1,4 +1,6 @@
+using Application.Implementation.AssignTest;
 using Application.Implementation.StudyGroups;
+using Application.Interfaces.AssignTest;
 using Application.Interfaces.StudyGroups;
 using Authorization.Impl;
 using Authorization.Impl.Settings;
@@ -18,6 +20,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using UseCases.Common.Services.Abstract.Mapper;
+using UseCases.Common.Services.Implementation;
+using UseCases.Common.Services.Implementation.Mapper;
 using UseCases.Participant.Commands.CreateParticipantCommand;
 using UseCases.Participant.Services;
 using UseCases.Test.Services.Abstract;
@@ -50,6 +55,9 @@ namespace Wep.App
             services.AddScoped<IParticipantFactory, ParticipantFactory>();
             services.AddScoped<IFilterProvider, FilterProvider>();
             services.AddScoped<ITestMapService, TestMapService>();
+            services.AddScoped<IAssignTestMapper, AssigntestMapper>();
+            services.AddScoped<IStudentMapper, StudentMapper>();
+            services.AddScoped<IAssignTestService, AssignTestService>();
             services.AddScoped<IStudyGroupService, StudyGroupService>();
             var jwtSettings = _cfg.GetSection(nameof(JwtSecuritySettings)).Get<JwtSecuritySettings>();
             var stmpSettings = _cfg.GetSection(nameof(SmtpClientSettings)).Get<SmtpClientSettings>();

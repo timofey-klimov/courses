@@ -10,6 +10,7 @@ using UseCases.Teachers.Queries.GetStudyGroupInfoQuery;
 using UseCases.Teachers.Queries.GetTeachersGroupsQuery;
 using UseCases.Teachers.Queries.GetTeachersQuery;
 using UseCases.Teachers.Queries.GetTeachersTestsQuery;
+using UseCases.Teachers.Queries.GetTeacherStudentInfoQuery;
 using UseCases.Test.Dto;
 using Wep.App.Controllers.Base;
 using Wep.App.Dto.Request.StudyGroups;
@@ -68,6 +69,14 @@ namespace Wep.App.Controllers
             CancellationToken token)
         {
             return Ok(await Mediator.Send(new GetTeacherStudentsRequest(dto.Offset, dto.Limit), token));
+        }
+
+        [Authorize(Roles = "Teacher")]
+        [HttpGet("students/{studentId}/info")]
+        public async Task<ApiResponse<StudentInfoDto>> GetTeacherStudentInfo(int studentId,
+            CancellationToken token)
+        {
+            return Ok(await Mediator.Send(new GetTeacherStudentInfoRequest(studentId), token));
         }
     }
 }

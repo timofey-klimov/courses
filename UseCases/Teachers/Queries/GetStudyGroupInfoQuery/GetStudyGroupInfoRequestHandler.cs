@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.Services.Abstract.Mapper;
 using UseCases.Teachers.Dto;
 
 namespace UseCases.Teachers.Queries.GetStudyGroupInfoQuery
@@ -16,11 +17,16 @@ namespace UseCases.Teachers.Queries.GetStudyGroupInfoQuery
     {
         private readonly IDbContext _dbContext;
         private readonly ICurrentUserProvider _currentUserProvider;
+        private readonly IAssignTestMapper _assignTestMapper;
 
-        public GetStudyGroupInfoRequestHandler(IDbContext dbContext, ICurrentUserProvider currentUserProvider)
+        public GetStudyGroupInfoRequestHandler(
+            IDbContext dbContext, 
+            ICurrentUserProvider currentUserProvider,
+            IAssignTestMapper assignTestMapper)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
+            _assignTestMapper = assignTestMapper ?? throw new ArgumentNullException(nameof(assignTestMapper));
         }
 
         public async Task<StudyGroupFullInfoDto> Handle(GetStudyGroupInfoRequest request, CancellationToken cancellationToken)
@@ -50,12 +56,7 @@ namespace UseCases.Teachers.Queries.GetStudyGroupInfoQuery
                                 Surname = x.Student.Surname,
                                 Login = x.Student.Login
                             }),
-                            AssignTestsInfo = x.AssignedTests.Select(x => new
-                            {
-                                Title = x.Test.Title,
-                                CreateDate = x.CreateDate,
-                                Deadline = x.Deadline
-                            }),
+                            AssignTestsInfo = x.AssignedTests
                         })
                         .FirstOrDefault(x => x.GroupId == request.Id),
                 })
@@ -67,7 +68,7 @@ namespace UseCases.Teachers.Queries.GetStudyGroupInfoQuery
             return new StudyGroupFullInfoDto(result.GroupInfo.StudentsInfo.Select(
                     x => new Common.Dto.StudentDto(default, x.Name, x.Surname, x.Login)),
                 result.GroupInfo.AssignTestsInfo.Select(
-                    x => new Common.Dto.AssignTestDto(x.Title, x.CreateDate, x.Deadline)),
+                    x => _assignTestMapper.ToAssignTestDto(x)),
                 new StudyGroup.Dto.SimpleStudyGroupDto(result.GroupInfo.GroupId, result.GroupInfo.Title, result.GroupInfo.CreateDate));
         }
     }
