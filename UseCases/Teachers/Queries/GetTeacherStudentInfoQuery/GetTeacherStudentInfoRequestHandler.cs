@@ -22,7 +22,8 @@ namespace UseCases.Teachers.Queries.GetTeacherStudentInfoQuery
         public GetTeacherStudentInfoRequestHandler(
             IDbContext dbContext, 
             ICurrentUserProvider currentUserProvider,
-            IStudentMapper studentMapper)
+            IStudentMapper studentMapper
+            )
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
@@ -38,18 +39,28 @@ namespace UseCases.Teachers.Queries.GetTeacherStudentInfoQuery
                         .ThenInclude(x => x.StudentAssignedTests)
                             .ThenInclude(x => x.AssignedTest)
                                 .ThenInclude(x => x.Test)
-                .Select(x => new
+                .Include(x => x.StudyGroups)
+                .Select(teacher => new
                 {
-                    Id = x.Id,
-                    StudentTeacher = x.StudentTeachers
-                        .FirstOrDefault(x => x.StudentId == request.StudentId)
+                    Id = teacher.Id,
+                    StudentInfo = teacher.StudentTeachers
+                        .Select(x => x.Student)
+                        .Select(student => new
+                        {
+                            Student = student,
+                            Groups = teacher.StudyGroups
+                                .Where(x => x.Students.Any(x => x.StudentId == student.Id))
+                        })
+                        .FirstOrDefault(x => x.Student.Id == request.StudentId)
                 })
                 .FirstOrDefaultAsync(x => x.Id == _currentUserProvider.GetUserId());
 
-            if (result == null || result.StudentTeacher == null)
+            if (result == null || result.StudentInfo == null)
                 throw new ParticipantNotFoundException();
 
-            return _studentMapper.ToStudentInfo(result.StudentTeacher.Student);
+            return _studentMapper
+                .ToStudentInfo(
+                    result.StudentInfo.Student, result.StudentInfo.Groups);
         }
     }
 }

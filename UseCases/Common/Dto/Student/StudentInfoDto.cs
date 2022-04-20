@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UseCases.Common.Dto;
+using UseCases.StudyGroup.Dto;
 
 namespace UseCases.Teachers.Dto
 {
@@ -9,10 +10,17 @@ namespace UseCases.Teachers.Dto
 
         public IEnumerable<AssignedTestDto> AssignTests { get; }
 
-        public StudentInfoDto(StudentDto studentDto, IEnumerable<AssignedTestDto> assignTests)
+        public IEnumerable<SimpleStudyGroupDto> StudyGroups { get; }
+
+        public StudentInfoDto(
+            StudentDto studentDto, 
+            IEnumerable<AssignedTestDto> assignTests, 
+            IEnumerable<SimpleStudyGroupDto> studyGroups
+            )
         {
             StudentDto = studentDto;
             AssignTests = assignTests;
+            StudyGroups = studyGroups;
         }
     }
 }
