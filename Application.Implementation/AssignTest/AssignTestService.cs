@@ -8,7 +8,8 @@ namespace Application.Implementation.AssignTest
     {
         public bool ChecckIfAssignedTestOverdueSoon(AssignedTest assignedTest)
         {
-            return DateTime.Now.AddDays(2) > assignedTest.Deadline;
+            return !CheckIfAssignedTestOverdue(assignedTest) 
+                && DateTime.Now.AddDays(2) > assignedTest.Deadline;
         }
 
         public bool CheckIfAssignedTestOverdue(AssignedTest assignedTest)
