@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="AssignTest\Commands\" />
+    <Folder Include="Participant\Dto\" />
   </ItemGroup>
 
 </Project>

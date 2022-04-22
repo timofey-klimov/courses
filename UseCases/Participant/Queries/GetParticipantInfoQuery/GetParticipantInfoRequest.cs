@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using UseCases.Common.Dto.Participants;
+using UseCases.Participant.Dto;
 
 namespace UseCases.Participant.Queries.GetParticipantInfoQuery
 {
-    public record GetParticipantInfoRequest : IRequest<ParticipantInfoDto>;
+    public record GetParticipantInfoRequest : IRequest<ParticipantDto>;
 }

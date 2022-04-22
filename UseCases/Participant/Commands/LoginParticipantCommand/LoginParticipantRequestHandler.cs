@@ -5,12 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Shared.Encription;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using UseCases.Common.Dto.Participants;
 using UseCases.Common.Participant;
 using UseCases.Participant.Dto;
 
@@ -46,8 +43,8 @@ namespace UseCases.Participant.Commands.LoginParticipantCommand
                 new Claim(ClaimTypes.Role, participant.Role.Name)
             };
 
-            var participantDto = new ParticipantInfoDto
-                (participant.Login, participant.Name, participant.Surname, participant.GetState(), participant.Role.Name, participant.Avatar.Content);
+            var participantDto = new ParticipantDto
+                (participant.Id,participant.Login, participant.Name, participant.Surname, participant.GetState(), participant.Role.Name);
 
             return new LoginResultDto(_jwtTokenProvider.CreateToken(claims), participantDto);
         }
