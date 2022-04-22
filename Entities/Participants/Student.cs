@@ -7,8 +7,8 @@ namespace Entities.Participants
     public class Student : Participant
     {
         protected Student() { }
-        public Student(string login, string name, string surname, string password, string hashedPassword, ParticipantRole userRole) 
-            : base(login, name, surname, password, hashedPassword, userRole)
+        public Student(string login, string name, string surname, string password, string hashedPassword, Avatar avatar, ParticipantRole userRole) 
+            : base(login, name, surname, password, hashedPassword, avatar, userRole)
         {
             _tests = new List<StudentAssignTest>();
             _groups = new List<StudentStudyGroup>();

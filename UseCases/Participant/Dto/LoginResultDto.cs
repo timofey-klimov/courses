@@ -1,5 +1,7 @@
-﻿namespace UseCases.Participant.Dto
+﻿using UseCases.Common.Dto.Participants;
+
+namespace UseCases.Participant.Dto
 {
-    public record LoginResultDto(string Token, ParticipantDto Participant);
+    public record LoginResultDto(string Token, ParticipantInfoDto Participant);
    
 }

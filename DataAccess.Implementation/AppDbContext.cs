@@ -35,6 +35,8 @@ namespace DataAccess.Implementation
 
         public DbSet<StudyGroup> StudyGroups { get; set; }
 
+        public DbSet<Avatar> Avatars { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

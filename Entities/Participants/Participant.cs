@@ -3,6 +3,7 @@ using Entities.Events;
 using Entities.Events.User;
 using Entities.Exceptions;
 using Entities.Participants.States;
+using System;
 using System.Collections.Generic;
 
 namespace Entities.Participants
@@ -16,6 +17,8 @@ namespace Entities.Participants
         public string Surname { get; private set; }
 
         public string HashedPassword { get; private set; }
+
+        public Avatar Avatar { get; private set; }
 
         private ParticipantState _state;
 
@@ -36,7 +39,14 @@ namespace Entities.Participants
             
         }
 
-        public Participant(string login, string name, string surname, string password, string hashedPassword, ParticipantRole role) 
+        public Participant(
+            string login,
+            string name, 
+            string surname, 
+            string password, 
+            string hashedPassword,
+            Avatar avatar,
+            ParticipantRole role) 
             : this()
         {
             Login = login;
@@ -46,6 +56,7 @@ namespace Entities.Participants
             _state = ParticipantState.Created;
             Events.Add(new UserCreatedEvent(login, password));
             Role = role;
+            Avatar = avatar;
         }
 
         public void Activate(string hashedPassword) => ActivasionState.Activate(hashedPassword);
@@ -69,5 +80,13 @@ namespace Entities.Participants
         }
 
         public bool IsBlocked() => _state == ParticipantState.Blocked;
+
+        public void ChangeAvatar(byte[] avatar)
+        {
+            if (avatar == null || avatar.Length == 0)
+                throw new ArgumentNullException(nameof(avatar));
+
+            Avatar = new Avatar(Guid.NewGuid().ToString(), avatar);
+        }
     }
 }

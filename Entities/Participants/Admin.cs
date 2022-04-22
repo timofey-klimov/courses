@@ -4,8 +4,8 @@
     {
         protected Admin() { }
 
-        public Admin(string login, string name, string surname, string password, string hashedPassword, ParticipantRole role) 
-            : base(login, name, surname, password, hashedPassword, role)
+        public Admin(string login, string name, string surname, string password, string hashedPassword, Avatar avatar, ParticipantRole role) 
+            : base(login, name, surname, password, hashedPassword, avatar, role)
         {
 
         }

@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UseCases.Common.Dto.Participants;
 using UseCases.Common.Participant;
 using UseCases.Participant.Dto;
 
@@ -32,6 +33,7 @@ namespace UseCases.Participant.Commands.LoginParticipantCommand
             var hashPassword = Sha256Encription.Encript(request.Password);
 
             var participant = await _dbContext.Participants
+                .Include(x => x.Avatar)
                 .Include(x => x.Role)
                 .FirstOrDefaultAsync(x => x.Login == request.Login && x.HashedPassword == hashPassword);
 
@@ -44,7 +46,8 @@ namespace UseCases.Participant.Commands.LoginParticipantCommand
                 new Claim(ClaimTypes.Role, participant.Role.Name)
             };
 
-            var participantDto = new ParticipantDto(participant.Id, participant.Login, participant.Name, participant.Surname, participant.GetState(), participant.Role.Name);
+            var participantDto = new ParticipantInfoDto
+                (participant.Login, participant.Name, participant.Surname, participant.GetState(), participant.Role.Name, participant.Avatar.Content);
 
             return new LoginResultDto(_jwtTokenProvider.CreateToken(claims), participantDto);
         }

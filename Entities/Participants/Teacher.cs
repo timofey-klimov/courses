@@ -6,8 +6,8 @@ namespace Entities.Participants
 {
     public class Teacher : Participant
     {
-        public Teacher(string login, string name, string surname, string password, string hashedPassword, ParticipantRole userRole) 
-            : base(login, name, surname, password, hashedPassword, userRole)
+        public Teacher(string login, string name, string surname, string password, string hashedPassword, Avatar avatar, ParticipantRole userRole) 
+            : base(login, name, surname, password, hashedPassword, avatar, userRole)
         {
             _tests = new List<Test>();
             _groups = new List<StudyGroup>();

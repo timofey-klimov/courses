@@ -1,11 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
 using UseCases.Common.Dto;
+using UseCases.Common.Dto.Participants;
 using UseCases.Participant.Commands.ActivateParticipantCommand;
 using UseCases.Participant.Commands.BlockParticipantCommand;
+using UseCases.Participant.Commands.ChangeAvatarCommand;
 using UseCases.Participant.Commands.CreateParticipantCommand;
 using UseCases.Participant.Commands.LoginParticipantCommand;
 using UseCases.Participant.Commands.UnblockParticipantCommand;
@@ -52,7 +55,7 @@ namespace Wep.App.Controllers
 
         [Authorize]
         [HttpGet("info")]
-        public async Task<ApiResponse<ParticipantDto>> GetInfo(CancellationToken token)
+        public async Task<ApiResponse<ParticipantInfoDto>> GetInfo(CancellationToken token)
         {
             return Ok(await Mediator.Send(new GetParticipantInfoRequest(), token));
         }
@@ -77,6 +80,16 @@ namespace Wep.App.Controllers
         public async Task<ApiResponse<int>> Unblock(int id, CancellationToken token)
         {
             return Ok(await Mediator.Send(new UnblockParticipantRequest(id), token));
+        }
+
+        [Authorize]
+        [HttpPost("avatar")]
+        public async Task<FileContentResult> CreateAvatar(IFormFile formFile,
+            CancellationToken token)
+        {
+            var result = await Mediator.Send(new ChangedAvatarRequest(formFile.OpenReadStream()), token);
+
+            return new FileContentResult(result, "application/octet-stream");
         }
     }
 }
