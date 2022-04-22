@@ -79,7 +79,7 @@ namespace Wep.App.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPatch("removeStudents")]
+        [HttpPut("removeStudents")]
         public async Task<ApiResponse<RemoveStudentsFromStudyGroupDto>> RemoveStudentsFromStudyGroup([FromBody] RemoveStudentsFromStudyGroupDto dto, 
             CancellationToken cancellationToken)
         {

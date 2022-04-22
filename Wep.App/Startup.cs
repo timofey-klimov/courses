@@ -120,17 +120,16 @@ namespace Wep.App
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseMiddleware<ExceptionHandler>();
             app.UseRouting();
+            app.UseSwagger(x => x.SerializeAsV2 = true);
+            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
             app.UseCors(x =>
             {
                 x.AllowAnyHeader();
                 x.AllowAnyOrigin();
+                x.AllowAnyMethod();
             });
-            app.UseSwagger(x => x.SerializeAsV2 = true);
-            app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
-
 
             app.UseAuthentication();
             app.UseAuthorization();
