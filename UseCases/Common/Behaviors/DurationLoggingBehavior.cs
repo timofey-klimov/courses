@@ -20,9 +20,9 @@ namespace UseCases.Common.Behaviors
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             var sw = new Stopwatch();
-            sw.Start();
             try
             {
+                sw.Start();
                 return await next();
             }
             finally
