@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using UseCases.Common.Behaviors;
 using UseCases.Common.Services.Abstract.Mapper;
 using UseCases.Common.Services.Implementation;
 using UseCases.Common.Services.Implementation.Mapper;
@@ -68,6 +69,7 @@ namespace Wep.App
             services.AddMemoryCache();
             services.AddMediatR(typeof(CreateParticipantRequest).Assembly);
             services.AddAutoMapper(typeof(TestProfiles).Assembly);
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DurationLoggingBehavior<,>));
 
             services.AddSwaggerGen(x =>
             {
