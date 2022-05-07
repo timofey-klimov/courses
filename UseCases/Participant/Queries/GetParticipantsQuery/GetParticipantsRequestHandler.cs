@@ -1,6 +1,9 @@
 ﻿using Authorization.Interfaces;
 using DataAccess.Interfaces;
 using DataAccess.Interfaces.Specifications.User;
+using Filter.Implement.Participant;
+using Filter.Interfaces;
+using Filter.Interfaces.FilterTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,25 +18,37 @@ namespace UseCases.Participant.Queries.GetParticipantsQuery
     public class GetParticipantsRequestHandler : IRequestHandler<GetParticipantsRequest, Pagination<ParticipantDto>>
     {
         private readonly IDbContext _dbContext;
-        private readonly IFilterProvider _filterProvider;
         private readonly ICurrentUserProvider _currentUserProvider;
-        public GetParticipantsRequestHandler(IDbContext dbContext, IFilterProvider filterProvider, ICurrentUserProvider currentUserProvider)
+
+        public GetParticipantsRequestHandler(IDbContext dbContext,ICurrentUserProvider currentUserProvider)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _filterProvider = filterProvider ?? throw new ArgumentNullException(nameof(filterProvider));
             _currentUserProvider = currentUserProvider ?? throw new ArgumentNullException(nameof(currentUserProvider));
         }
+
         public async Task<Pagination<ParticipantDto>> Handle(GetParticipantsRequest request, CancellationToken cancellationToken)
         {
-            var spec = new ParticipantFilterSpecification(request.Name, request.Surname, request.Login, request.IsOnlyActive);
+            var filter = new ParticipantFilter()
+            {
+                Name = new StringFilter(request.Name),
+                Login = new StringFilter(request.Login),
+                Surname = new StringFilter(request.Surname)
+            };
+
+            var spec = new OnlyActiveParticipantSpecification(request.IsOnlyActive);
 
             var baseQuery = _dbContext.Participants
                 .Include(x => x.Role)
                 .Where(x => x.CreatedBy == _currentUserProvider.GetUserId());
 
-            var count = await _filterProvider.GetCountQuery(baseQuery, spec);
+            var count = await baseQuery
+                .Where(spec.CreateCriteria())
+                .Filter(filter, FilterCondition.And)
+                .CountAsync();
 
-            var participants = _filterProvider.GetQuery(baseQuery, spec)
+            var participants = baseQuery
+                .Where(spec.CreateCriteria())
+                .Filter(filter, FilterCondition.And)
                 .Skip(request.Offset)
                 .Take(request.Limit)
                 .OrderBy(x => x.Id)

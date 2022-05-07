@@ -1,4 +1,5 @@
 ﻿using DataAccess.Interfaces;
+using DataAccess.Interfaces.Specifications.Base;
 using Entities.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

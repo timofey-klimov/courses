@@ -5,8 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Participant\Dto\**" />
     <Compile Remove="Test\Dto\Create\**" />
+    <EmbeddedResource Remove="Participant\Dto\**" />
     <EmbeddedResource Remove="Test\Dto\Create\**" />
+    <None Remove="Participant\Dto\**" />
     <None Remove="Test\Dto\Create\**" />
   </ItemGroup>
 
@@ -20,13 +23,13 @@
     <ProjectReference Include="..\Authorization.Interfaces\Authorization.Interfaces.csproj" />
     <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
     <ProjectReference Include="..\Entities\Entities.csproj" />
+    <ProjectReference Include="..\Filter.Implement\Filter.Implement.csproj" />
     <ProjectReference Include="..\MailSender.Interfaces\MailSender.Interfaces.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="AssignTest\Commands\" />
-    <Folder Include="Participant\Dto\" />
   </ItemGroup>
 
 </Project>

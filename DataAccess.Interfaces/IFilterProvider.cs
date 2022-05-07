@@ -1,4 +1,5 @@
-﻿using Entities.Base;
+﻿using DataAccess.Interfaces.Specifications.Base;
+using Entities.Base;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

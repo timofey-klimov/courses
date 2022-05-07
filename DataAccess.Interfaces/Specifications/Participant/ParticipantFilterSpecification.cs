@@ -42,7 +42,7 @@ namespace DataAccess.Interfaces.Specifications.User
 
             if (_isOnlyActive)
             {
-                var spec = new OnlyActiveParticipantSpecification();
+                var spec = new OnlyActiveParticipantSpecification(true);
                 compositSpec = compositSpec == null ? spec : compositSpec.And(spec);
             }
 

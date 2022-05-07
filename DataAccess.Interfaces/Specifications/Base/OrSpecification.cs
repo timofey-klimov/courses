@@ -1,6 +1,5 @@
-﻿using DataAccess.Interfaces;
-using DataAccess.Interfaces.Specifications.Base;
-using Entities.Base;
+﻿using Entities.Base;
+using Shared;
 using System;
 using System.Linq.Expressions;
 
@@ -21,12 +20,8 @@ namespace DataAccess.Interfaces.Specifications.Base
         {
             var leftExpression = _left.CreateCriteria();
             var rightExpression = _right.CreateCriteria();
-            var paramExpr = Expression.Parameter(typeof(T));
-            var exprBody = Expression.OrElse(leftExpression.Body, rightExpression.Body);
-            exprBody = (BinaryExpression)new ParameterReplacer(paramExpr).Visit(exprBody);
-            var finalExpr = Expression.Lambda<Func<T, bool>>(exprBody, paramExpr);
 
-            return finalExpr;
+            return leftExpression.Or(rightExpression);
         }
     }
 }

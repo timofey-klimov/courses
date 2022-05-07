@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace DataAccess.Interfaces
+namespace DataAccess.Interfaces.Specifications.Base
 {
     public interface ISpecification<T>
         where T : BaseEntity
